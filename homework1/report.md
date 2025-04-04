@@ -1,1 +1,67 @@
-none
+# 41243210
+# 41243231
+
+作業一
+
+## 解題說明
+
+本題要求做一個複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
+
+### 解題策略
+
+
+
+## 程式實作
+
+以下為主要程式碼：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int sigma(int n) {
+    if (n < 0)
+        throw "n < 0";
+    else if (n <= 1)
+        return n;
+    return n + sigma(n - 1);
+}
+
+int main() {
+    int result = sigma(3);
+    cout << result << '\n';
+}
+```
+
+## 效能分析
+
+1. 時間複雜度：程式的時間複雜度為 $O(\log n)$。
+2. 空間複雜度：空間複雜度為 $O(100\times \log n + \pi)$。
+
+## 測試與驗證
+
+### 測試案例
+
+| 測試案例 | 輸入參數 $n$ | Insertion Sort | Merge Sort |Heap Sort | Quick Sort |Composite Sorting Function |
+|----------|--------------|----------|----------|----------|----------|----------|
+| 測試一   | $n = 500$      | 0        | 0        |0        |0        |0        |
+| 測試二   | $n = 1000$      | 1        | 1        |0        |0        |0        |
+| 測試三   | $n = 2000$      | 6        | 6        |0        |0        |0        |
+| 測試四   | $n = 3000$      | 15       | 15       |0        |0        |0        |
+| 測試五   | $n = 4000$     | 異常拋出 | 異常拋出 |0        |0        |0        |
+| 測試六   | $n = 5000$     | 異常拋出 | 異常拋出 |0        |0        |0        |
+
+
+### 編譯與執行指令
+
+```shell
+$ g++ -std=c++17 -o sigma sigma.cpp
+$ ./sigma
+6
+```
+
+### 結論
+
+
+
+
