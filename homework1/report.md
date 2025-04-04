@@ -13,23 +13,285 @@
 
 ## 程式實作
 
-以下為主要程式碼：
+Insertion Sort
 
 ```cpp
 #include <iostream>
+#include <fstream>
+#include <ctime>
 using namespace std;
 
-int sigma(int n) {
-    if (n < 0)
-        throw "n < 0";
-    else if (n <= 1)
-        return n;
-    return n + sigma(n - 1);
+void insertSort(int* a, int n){
+    for(int i = 2; i <= n; i++){
+        a[0] = a[i];
+
+        int j = i - 1;
+        for(; j >= 1 && a[0] < a[j]; j--){
+            a[j + 1] = a[j];
+        }
+
+        a[j + 1] = a[0];
+    }
 }
 
-int main() {
-    int result = sigma(3);
-    cout << result << '\n';
+bool checksort(int* a, int n){
+    for(int i = 1; i < n; i++)
+        if(a[i] > a[i+1]) return false;
+    return true;
+}
+
+int main(){
+    ifstream in;
+    int n;
+    in.open("data.txt");
+    in >> n;
+    int a[n+1];
+    
+    for(int i = 1; i < n; i++)
+        in >> a[i];
+
+    double start, stop;
+    start = clock();
+    insertSort(a, n);
+    stop = clock();
+
+    // for(int i = 1; i <= n; i++) cout << a[i] << " ";
+    cout << checksort(a, n) << endl;
+    cout << "執行時間:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+
+    in.close();
+}
+```
+
+Quick Sort
+
+```cpp
+    #include <iostream>
+#include <fstream>
+#include <ctime>
+#include <vector>
+using namespace std;
+
+template<class T>
+void quicksort(vector<T>& a, int left, int right){
+    if(left < right){
+        int mid = a[(left+right)/2], pivot;
+
+        // 取三個數的中間值
+        pivot = left;
+        if((a[left] >= mid && mid >= a[right]) || (a[left] <= mid && mid <= a[right]))
+            pivot = (left+right) / 2;
+        if((a[right] >= a[left] && a[right] <= mid) || (a[right] <= a[left] && a[right] >= mid))
+            pivot = right;
+
+        // 將pivot移到最左邊
+        swap(a[left], a[pivot]);
+        int i = left, j = right + 1;
+        do{
+            do i++; while(a[i] < a[left]);
+            do j--; while(a[j] > a[left]);
+            if(i < j) swap(a[i], a[j]);
+        }while(i < j);
+        
+        swap(a[left], a[j]);
+        
+        quicksort(a, left, j - 1);
+        quicksort(a, j + 1, right);
+    }
+
+}
+
+template<class T>
+bool checksort(vector<T>& a, int n){
+    for(int i = 0; i < n - 1; i++)
+        if(a[i] > a[i+1]) return false;
+    return true;
+}
+
+int main(){
+    ifstream in;
+    int n;
+    in.open("data.txt");
+    in >> n;
+    vector<int> a(n);
+    
+    double start, stop;
+    for(int i = 0; i < n; i++)
+        in >> a[i];
+
+    start = clock();
+    quicksort(a, 0, n - 1);
+    stop = clock();
+
+    // for(int i = 0; i < n; i++) cout << a[i] << " ";
+    // cout << endl;
+    cout << checksort(a, n) << endl;
+    cout << "執行時間:" << (stop - start) / CLOCKS_PER_SEC << endl;
+   
+    in.close();
+}
+
+```
+
+Merge Sort
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <ctime>
+using namespace std;
+
+// 將左右陣列合併並排列
+template<class T>
+void merge(vector<T>& a, const int& front, const int& mid, const int& end){
+    int i, j, count;
+    i = j = 0;
+    count = front;
+    vector<T>   left(a.begin()+front, a.begin()+mid+1), 
+                right(a.begin()+mid+1, a.begin()+end+1);
+
+    // 若左陣列和右邊界都還沒到底，繼續比較
+    while(i < left.size() && j < right.size()){
+        if(left[i] < right[j]){
+            a[count] = left[i];
+            i++;
+        }
+        else{
+            a[count] = right[j];
+            j++;
+        }
+        count++;
+    }
+
+    // 將剩下的數值填入結果
+    while(i < left.size())
+        a[count++] = left[i++];
+    while(j < right.size())
+        a[count++] = right[j++];
+
+}
+
+template<class T>
+void mergesort(vector<T>& a, const int& front, const int& end){
+
+    if(front < end){
+        int mid;
+        mid = (front+end) / 2;
+        mergesort(a, front, mid);
+        mergesort(a, mid+1, end);
+        merge(a, front, mid, end);
+    }
+}
+
+template<class T>
+bool checksort(vector<T>& a, int n){
+    for(int i = 0; i < n - 1; i++){
+        if(a[i] > a[i+1]) return false;
+    }
+    return true;
+}
+
+int main(){
+    ifstream in;
+    int n;
+    in.open("data.txt");
+    in >> n;
+    vector<int> test(n);
+    for(int i = 0; i < n; i++){
+        in >> test[i];
+    }
+
+    double start, stop;
+    start = clock();
+    mergesort(test, 0, n - 1);
+    stop = clock();
+
+    // for(int i = 0; i < n; i++) cout << test[i] << " ";
+    // cout << endl;
+    cout << checksort(test, n) << endl;
+    cout << "執行時間:" << (stop - start) / CLOCKS_PER_SEC<< endl;
+
+    in.close();
+}
+```
+
+Heap Sort
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <ctime>
+using namespace std;
+
+template<class T>
+void maxheapify(vector<T>& a, const int& root, const int& len){
+    int left = 2*root+1;
+    int right = 2*root+2;
+    int largest = root;
+
+    if(left < len && a[left] >= a[largest]){
+        largest = left;
+    }
+    
+    if(right < len && a[right] >= a[largest]){
+        largest = right;
+    }
+
+    if(largest != root){
+        swap(a[root], a[largest]);
+        maxheapify(a, largest, len);
+    }
+}
+
+// 建立最大堆積樹
+template<class T>
+void maxheap(vector<T>& a){
+    for(int i = a.size()/2; i >= 0; i--){
+        maxheapify(a, i, a.size());
+    }
+}
+
+template<class T>
+void heapsort(vector<T>& a){
+    int len = a.size();
+    maxheap(a);
+    for(int i = a.size()-1; i > 0; i--){
+        swap(a[i], a[0]);
+        // 減掉以排序的長度在找下個最大堆積
+        maxheapify(a, 0, --len);
+    }
+}
+
+template<class T>
+bool checksort(vector<T>& a, int n){
+    for(int i = 0; i < n - 1; i++){
+        if(a[i] > a[i+1]) return false;
+    }
+    return true;
+}
+
+int main(){
+    ifstream in;
+    int n;
+    in.open("data.txt");
+    in >> n;
+    vector<int> test(n);
+    for(int i = 0; i < n; i++){
+        in >> test[i];
+    }
+
+    double start, stop;
+    start = clock();
+    heapsort(test);
+    stop = clock();
+
+    // for(int i = 0; i < n; i++) cout << test[i] << " ";
+    cout << checksort(test, n) << endl;
+    cout << "執行時間:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+
+    in.close();
 }
 ```
 
