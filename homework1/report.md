@@ -5,7 +5,7 @@
 
 ## 解題說明
 
-本題要求做一個複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
+本題要求測試4種排序方法，他們的效率時間範圍，並因此做出複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
 
 ### 解題策略
 
