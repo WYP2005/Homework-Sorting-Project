@@ -24,7 +24,7 @@ void maxheapify(vector<T>& a, const int& root, const int& len){
     }
 }
 
-// «Ø¥ß³Ì¤j°ï¿n¾ğ
+// å»ºç«‹æœ€å¤§å †ç©æ¨¹
 template<class T>
 void maxheap(vector<T>& a){
     for(int i = a.size()/2; i >= 0; i--){
@@ -38,7 +38,7 @@ void heapsort(vector<T>& a){
     maxheap(a);
     for(int i = a.size()-1; i > 0; i--){
         swap(a[i], a[0]);
-        // ´î±¼¥H±Æ§Çªºªø«×¦b§ä¤U­Ó³Ì¤j°ï¿n
+        // æ¸›æ‰ä»¥æ’åºçš„é•·åº¦åœ¨æ‰¾ä¸‹å€‹æœ€å¤§å †ç©
         maxheapify(a, 0, --len);
     }
 }
@@ -68,7 +68,7 @@ int main(){
 
     // for(int i = 0; i < n; i++) cout << test[i] << " ";
     cout << checksort(test, n) << endl;
-    cout << "°õ¦æ®É¶¡:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+    cout << "åŸ·è¡Œæ™‚é–“:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
 
     in.close();
 }

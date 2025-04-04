@@ -10,20 +10,16 @@ int main(){
     out.open("data.txt");
     srand(time(NULL));
     
-    cout << "¸ê®Æµ§¼Æ:";
+    cout << "è³‡æ–™ç­†æ•¸:";
     cin >> n;
-    // cout << "¤U­­:";
-    // cin >> min;
-    // cout << "¤W­­:";
-    // cin >> max;
 
     out << n << " ";
-    // ¤@¯ë¥´¶Ã
+    // ä¸€èˆ¬æ‰“äº‚
     // for(int i = 0; i < n; i++){
     //     out << rand()%(max-min+1) << " ";
     // }
 
-    // insertion sort³Ì¯Ó®É
+    // insertion sortæœ€è€—æ™‚
     for(int i = n; i > 0; i--){
         out << i << " ";
     }

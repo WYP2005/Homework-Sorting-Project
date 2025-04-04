@@ -10,7 +10,7 @@ void generateWorstTimeData(int a[], const int& left, const int& right){
         int temp[right - left + 1];
         int index = 0;
 
-        // ¥æ¿ù
+        // äº¤éŒ¯
         for(int i = left; i <= right; i+=2)
             temp[index++] = a[i];
         for(int i = left+1; i <= right; i+=2)
@@ -20,11 +20,11 @@ void generateWorstTimeData(int a[], const int& left, const int& right){
             cout << temp[i - left] << " ";
         cout << endl;
 
-        // ÂÐ»\­ì°}¦C
+        // è¦†è“‹åŽŸé™£åˆ—
         for(int i = left; i <= right; i++)
             a[i] = temp[i - left];
         
-        // ¥u³Ñ¨â­Ó¤¸¯À´N¥æ´«
+        // åªå‰©å…©å€‹å…ƒç´ å°±äº¤æ›
         if((right - left) == 1) swap(a[left], a[right]);
 
         generateWorstTimeData(a, left, (left+right)/2);
@@ -39,7 +39,7 @@ int main(){
     out.open("data.txt");
     srand(time(NULL));
     
-    cout << "¸ê®Æµ§¼Æ:";
+    cout << "è³‡æ–™ç­†æ•¸:";
     cin >> n;
     out << n << " ";
 

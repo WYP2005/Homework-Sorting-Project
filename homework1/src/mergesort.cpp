@@ -4,7 +4,7 @@
 #include <ctime>
 using namespace std;
 
-// ±N¥ª¥k°}¦C¦X¨Ö¨Ã±Æ¦C
+// å°‡å·¦å³é™£åˆ—åˆä½µä¸¦æ’åˆ—
 template<class T>
 void merge(vector<T>& a, const int& front, const int& mid, const int& end){
     int i, j, count;
@@ -13,7 +13,7 @@ void merge(vector<T>& a, const int& front, const int& mid, const int& end){
     vector<T>   left(a.begin()+front, a.begin()+mid+1), 
                 right(a.begin()+mid+1, a.begin()+end+1);
 
-    // ­Y¥ª°}¦C©M¥kÃä¬É³£ÁÙ¨S¨ì©³¡AÄ~Äò¤ñ¸û
+    // è‹¥å·¦é™£åˆ—å’Œå³é‚Šç•Œéƒ½é‚„æ²’åˆ°åº•ï¼Œç¹¼çºŒæ¯”è¼ƒ
     while(i < left.size() && j < right.size()){
         if(left[i] < right[j]){
             a[count] = left[i];
@@ -26,7 +26,7 @@ void merge(vector<T>& a, const int& front, const int& mid, const int& end){
         count++;
     }
 
-    // ±N³Ñ¤Uªº¼Æ­È¶ñ¤Jµ²ªG
+    // å°‡å‰©ä¸‹çš„æ•¸å€¼å¡«å…¥çµæœ
     while(i < left.size())
         a[count++] = left[i++];
     while(j < right.size())
@@ -72,7 +72,7 @@ int main(){
     // for(int i = 0; i < n; i++) cout << test[i] << " ";
     // cout << endl;
     cout << checksort(test, n) << endl;
-    cout << "°õ¦æ®É¶¡:" << (stop - start) / CLOCKS_PER_SEC<< endl;
+    cout << "åŸ·è¡Œæ™‚é–“:" << (stop - start) / CLOCKS_PER_SEC<< endl;
 
     in.close();
 }

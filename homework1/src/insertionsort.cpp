@@ -39,7 +39,7 @@ int main(){
 
     // for(int i = 1; i <= n; i++) cout << a[i] << " ";
     cout << checksort(a, n) << endl;
-    cout << "°õ¦æ®É¶¡:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+    cout << "åŸ·è¡Œæ™‚é–“:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
 
     in.close();
 }
