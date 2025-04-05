@@ -16,10 +16,6 @@ void generateWorstTimeData(int a[], const int& left, const int& right){
         for(int i = left+1; i <= right; i+=2)
             temp[index++] = a[i];
 
-        for(int i = left; i <= right; i++)
-            cout << temp[i - left] << " ";
-        cout << endl;
-
         // 覆蓋原陣列
         for(int i = left; i <= right; i++)
             a[i] = temp[i - left];

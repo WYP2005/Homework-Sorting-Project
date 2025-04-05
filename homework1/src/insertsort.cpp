@@ -3,15 +3,15 @@
 #include <ctime>
 using namespace std;
 
-void insertSort(int* a, int n){
+template<class T>
+void insertsort(T* a, int n){
     for(int i = 2; i <= n; i++){
         a[0] = a[i];
-
         int j = i - 1;
-        for(; j >= 1 && a[0] < a[j]; j--){
+        while(j >= 1 && a[0] < a[j]){
             a[j + 1] = a[j];
+            j--;
         }
-
         a[j + 1] = a[0];
     }
 }
@@ -34,7 +34,7 @@ int main(){
 
     double start, stop;
     start = clock();
-    insertSort(a, n);
+    insertsort(a, n);
     stop = clock();
 
     // for(int i = 1; i <= n; i++) cout << a[i] << " ";
