@@ -46,7 +46,12 @@ int main() {
         return 1;
     }
 
+    // 在第一行寫入數據大小
+    outFile << n << std::endl;
+
+    // 在後續行中寫入實際數據
     for (int i = 0; i < n; ++i) outFile << arr[i] << " ";
+    outFile << std::endl;
     outFile.close();
 
     std::cout << "數據已成功寫入 data.txt！" << std::endl;
