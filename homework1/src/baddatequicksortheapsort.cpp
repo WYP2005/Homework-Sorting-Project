@@ -44,8 +44,7 @@ int main() {
     }
 
     generateWorstCasePermutation(n, outfile, n);
-
-    generateWorstCasePermutation(n, outfile, n);
+    
 
     outfile.close();
     cout << "最糟情況資料已生成並寫入 data.txt\n";
