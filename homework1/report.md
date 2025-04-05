@@ -302,7 +302,7 @@ int main(){
 
 ## 測試與驗證
 
-### 時間精確度:µ
+### 時間精確度:s
 
 ### 不同排序最糟情況運行時間(5次平均)
 | 測試案例 | 輸入參數 $n$ | Insertion Sort | Merge Sort |Heap Sort | Quick Sort |
