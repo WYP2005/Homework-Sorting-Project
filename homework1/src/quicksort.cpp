@@ -11,10 +11,10 @@ void quicksort(vector<T>& a, int left, int right){
 
         // 取三個數的中間值
         pivot = left;
-        if((a[left] >= mid && mid >= a[right]) || (a[left] <= mid && mid <= a[right]))
-            pivot = (left+right) / 2;
-        if((a[right] >= a[left] && a[right] <= mid) || (a[right] <= a[left] && a[right] >= mid))
-            pivot = right;
+        // if((a[left] >= mid && mid >= a[right]) || (a[left] <= mid && mid <= a[right]))
+        //     pivot = (left+right) / 2;
+        // if((a[right] >= a[left] && a[right] <= mid) || (a[right] <= a[left] && a[right] >= mid))
+        //     pivot = right;
 
         // 將pivot移到最左邊
         swap(a[left], a[pivot]);
