@@ -166,8 +166,17 @@ void heapsort(vector<T>& a){
 | Heap Sort   | O($n log n$)   | O($n log n$) | O($n log n$) |
 | Quick Sort   | O($n log n$)  | O($n^2$) | O($n log n$)
 
-### 時間精確度:s
+### 計時方式
+使用在<ctime>中的clock()，單位為毫秒
+用法如以下程式
+```c++
+start = clock();
+result = insertsort(a, n);
+stop = clock();
+(stop - start) / CLOCKS_PER_SEC // 轉成秒
+```
 
+### 時間精確度:s
 ### 不同排序最糟情況運行時間
 | 測試案例 | 輸入參數 $n$ | Insertion Sort(55次平均) | Quick Sort(55次平均) | Merge Sort(20組取最大)|Heap Sort(20組取最大) |
 |----------|--------------|----------|----------|----------|----------|
