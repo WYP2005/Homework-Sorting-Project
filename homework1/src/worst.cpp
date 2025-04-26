@@ -167,8 +167,8 @@ void quicksortWorst(vector<T>& a, const int& front, const int& end) {
         } while (i < j);
         swap(a[front], a[j]);
 
-        quicksortIn(a, front, j - 1); // 對左邊的數進行排序
-        quicksortIn(a, j + 1, end);   // 對右邊的數進行排序
+        quicksortWorst(a, front, j - 1); // 對左邊的數進行排序
+        quicksortWorst(a, j + 1, end);   // 對右邊的數進行排序
     }
 }
 
@@ -196,8 +196,8 @@ void quicksortNormal(vector<T>& a, const int& front, const int& end) {
         } while (i < j);
         swap(a[front], a[j]);
 
-        quicksortIn(a, front, j - 1); // 對左邊的數進行排序
-        quicksortIn(a, j + 1, end);   // 對右邊的數進行排序
+        quicksortNormal(a, front, j - 1); // 對左邊的數進行排序
+        quicksortNormal(a, j + 1, end);   // 對右邊的數進行排序
     }
 }
 template<class T>
@@ -309,7 +309,7 @@ bool checksort(const vector<T>& a, int n) {
 int main() {
 
     // 最糟狀況
-    int data = 100;
+    int data = 10000;
     int n;
     vector<int> result;
     double start, stop;
