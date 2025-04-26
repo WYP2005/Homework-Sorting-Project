@@ -7,7 +7,7 @@ using namespace std;
 // insertion sort
 template<class T>
 vector<T> insertsort(vector<T> a, int n){
-    int temp;
+    T temp;
     for(int i = 1; i < n; i++){
         temp = a[i];
         int j = i - 1;
@@ -23,10 +23,14 @@ vector<T> insertsort(vector<T> a, int n){
 // quick sort
 template<class T>
 vector<T> quicksort(vector<T> a, const int& front, const int& end){
-    
-    if(front >= end) return a;
+    if(front >= end)
+    {
+        vector<T> result;
+        result.push_back(a[front]);
+        return result;
+    }
+
     int mid = a[(front+end)/2], pivot;
-    
     // 取三個數的中間值
     pivot = front;
     if((a[front] >= mid && mid >= a[end]) || (a[front] <= mid && mid <= a[end]))
@@ -165,7 +169,7 @@ int main(){
     // 讀入資料
     for(int i = 0; i < n; i++)
         in >> a[i];
-
+        
     // 測試插入排序
     start = clock();
     result = insertsort(a, n);
