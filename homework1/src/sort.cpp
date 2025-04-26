@@ -8,10 +8,10 @@ using namespace std;
 template<class T>
 vector<T> insertsort(vector<T> a, int n){
     int temp;
-    for(int i = 1; i <= n; i++){
-        temp = a[i]
+    for(int i = 1; i < n; i++){
+        temp = a[i];
         int j = i - 1;
-        while(j >= 1 && temp < a[j]){
+        while(j >= 0 && temp < a[j]){
             a[j + 1] = a[j];
             j--;
         }
@@ -138,7 +138,7 @@ vector<T> mergesort(const vector<T>& a, const int& front, const int& end){
         
     int mid = (front+end) / 2;
     
-    vector<T> left = mergesort(a, front, mid);
+    vector<T> left = mergesort(a, front, mid),
               right = mergesort(a, mid+1, end);
 
     // 合併並排列
@@ -185,7 +185,7 @@ int main(){
     result = mergesort(a, 0, n - 1);
     stop = clock();
     if(checksort(result, n))
-        cout << "meragesort time:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+        cout << "mergesort time:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
 
     // 測試堆積排序
     start = clock();
