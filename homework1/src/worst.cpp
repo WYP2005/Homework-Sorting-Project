@@ -309,7 +309,7 @@ bool checksort(const vector<T>& a, int n) {
 int main() {
 
     // 最糟狀況
-    int data = 10000;
+    int data = 50000;
     int n;
     vector<int> result;
     double start, stop;
