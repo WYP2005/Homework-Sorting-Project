@@ -171,7 +171,7 @@ void heapsort(vector<T>& a){
 用法如以下程式
 ```c++
 start = clock();
-result = insertsort(a, n);
+insertsort(a, n);
 stop = clock();
 (stop - start) / CLOCKS_PER_SEC // 轉成秒
 ```
