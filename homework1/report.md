@@ -16,17 +16,19 @@
 Insertion Sort
 
 ```cpp
-void insertSort(int* a, int n){
-    for(int i = 2; i <= n; i++){
-        a[0] = a[i];
-
+template<class T>
+vector<T> insertsort(vector<T> a, int n){
+    T temp;
+    for(int i = 1; i < n; i++){
+        temp = a[i];
         int j = i - 1;
-        for(; j >= 1 && a[0] < a[j]; j--){
+        while(j >= 0 && temp < a[j]){
             a[j + 1] = a[j];
+            j--;
         }
-
-        a[j + 1] = a[0];
+        a[j + 1] = temp;
     }
+    return a;
 }
 ```
 
