@@ -100,6 +100,26 @@ void generate_heap_worst(int n) {
     write_to_file(arr, "data.txt");
     //cout << "Generated Heap Sort worst-case data." << endl;
 }
+
+void generate_random_data(int n) {
+    ofstream out("data.txt");
+    if (!out.is_open()) {
+        cerr << "無法開啟檔案: " << "data.txt" << endl;
+        return;
+    }
+
+    srand(time(NULL)); // 設定隨機種子
+
+    out << n << endl; // 寫入資料筆數
+    for (int i = 0; i < n; i++) {
+        out << rand() % n << " ";
+    }
+    out << endl;
+
+    out.close();
+}
+
+
 // insertion sort
 template<class T>
 vector<T> insertsort(vector<T> a, int n) {
@@ -247,7 +267,9 @@ bool checksort(const vector<T>& a, int n) {
 }
 
 int main() {
-    int data = 5000;
+
+    //                                                                    最糟狀況
+    int data = 50;
     int n;
     vector<int>  result;
     double start, stop;
@@ -267,12 +289,12 @@ int main() {
             count++;
         }
     }
-    cout << "insertsort time:" << time / count << "s" << endl;
+    std::cout << "insertsort time:" << time / count << "s" << endl;
     // 測試快速排序
 
 
     double max_time = 0;
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 100; i++) {
         generate_quick_worst(data);
         a = read_data("data.txt", n);
         start = clock();
@@ -284,14 +306,14 @@ int main() {
             }
         }
     }
-    cout << "quicksort time:" << max_time << "s" << endl;
+    std::cout << "quicksort time:" << max_time << "s" << endl;
 
 
 
 
     // 測試整合排序
-    double max_time = 0;
-    for (int i = 0; i < 50; i++) {
+    max_time = 0;
+    for (int i = 0; i < 20; i++) {
         generate_merge_worst(data);
         a = read_data("data.txt", n);
         start = clock();
@@ -303,11 +325,11 @@ int main() {
             }
         }
     }
-    cout << "mergesort time:" << max_time << "s" << endl;
+    std::cout << "mergesort time:" << max_time << "s" << endl;
     // 測試堆積排序
 
     max_time = 0;
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 20; i++) {
         generate_heap_worst(data);
         a = read_data("data.txt", n);
         start = clock();
@@ -319,5 +341,48 @@ int main() {
             }
         }
     }
-    cout << "heapsort time:" << max_time << "s" << endl;
+    std::cout << "heapsort time:" << max_time << "s" << endl;
+    //                                                                                                                                 平均狀況      
+    double time2 = 0, count2 = 0;
+    double time3 = 0, count3 = 0;
+    double time4 = 0, count4 = 0;
+    double time5 = 0,count5= 0;
+	double time6 = 0, count6 = 0;
+    for (int i = 0; i < 20; i++) {
+        generate_random_data(data);
+        a = read_data("data.txt", n);
+        start = clock();
+        result = insertsort(a, n);
+        stop = clock();
+        if (checksort(result, n)) {
+            time2 += (stop - start) / CLOCKS_PER_SEC;
+            count2++;
+        }
+        start = clock();
+        result = quicksort(a, 0, n - 1);
+        stop = clock();
+        if (checksort(result, n)) {
+            time3 += (stop - start) / CLOCKS_PER_SEC;
+            count3++;
+        }
+        start = clock();
+        result = mergesort(a, 0, n - 1);
+        stop = clock();
+        if (checksort(result, n)) {
+            time4 += (stop - start) / CLOCKS_PER_SEC;
+            count4++;
+        }
+        start = clock();
+        result = heapsort(a);
+        stop = clock();
+        if (checksort(result, n)) {
+            time5 += (stop - start) / CLOCKS_PER_SEC;
+            count5++;
+        }
+    }
+    std::cout << "insertsort time:" << time2 / count2 << "s" << endl;
+    std::cout << "quicksort time:" << time3 / count3 << "s" << endl;
+    std::cout << "mergesort time:" << time4 / count4 << "s" << endl;
+    std::cout << "heapsort time:" << time5 / count5 << "s" << endl;
+    
 }
