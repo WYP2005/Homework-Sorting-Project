@@ -1,0 +1,292 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+#include <string>
+using namespace std;
+
+vector<int> read_data(const string& filename, int& n) {
+    ifstream in;
+    in.open(filename);
+    if (!in.is_open()) {
+        throw runtime_error("Cannot open file: " + filename);
+    }
+
+    // 讀入資料筆數
+    in >> n;
+    vector<int> a(n);
+
+    // 讀入資料
+    for (int i = 0; i < n; i++) {
+        if (!(in >> a[i])) {
+            in.close();
+            throw runtime_error("Invalid data format in file: " + filename);
+        }
+    }
+
+    in.close();
+    return a;
+}
+
+// Function to write data to file in the required format
+void write_to_file(const vector<int>& data, const string& filename) {
+    ofstream out(filename);
+    out << data.size() << endl;
+    for (int i = 0; i < data.size(); i++) {
+        out << data[i];
+        if (i < data.size() - 1) out << " ";
+    }
+    out << endl;
+    out.close();
+}
+
+// Permute function to generate random permutation
+void permute(vector<int>& arr, int n) {
+    for (int i = n - 1; i >= 1; --i) {
+        int j = rand() % (i + 1); // Random index from 0 to i
+        swap(arr[i], arr[j]);
+    }
+}
+
+// Insertion Sort worst-case: [n, n-1, ..., 1]
+void generate_insertion_worst(int n) {
+    vector<int> data(n);
+    for (int i = 0; i < n; i++) {
+        data[i] = n - i;
+    }
+    write_to_file(data, "data.txt");
+    cout << "Generated Insertion Sort worst-case data." << endl;
+}
+
+// Quick Sort worst-case: Sorted array [1, 2, ..., n]
+void generate_quick_worst(int n) {
+    vector<int> data(n);
+    for (int i = 0; i < n; i++) {
+        data[i] = i + 1;
+    }
+    write_to_file(data, "data.txt");
+    cout << "Generated Quick Sort worst-case data." << endl;
+}
+
+// Generate random permutation for Merge Sort
+void generate_merge_worst(int n) {
+    srand(time(0));
+    vector<int> arr(n);
+
+    // Initialize array with 1 to n
+    for (int i = 0; i < n; ++i) {
+        arr[i] = i + 1;
+    }
+
+    // Generate one random permutation
+    permute(arr, n);
+    write_to_file(arr, "data.txt");
+    cout << "Generated Merge Sort worst-case data." << endl;
+}
+
+// Generate random permutation for Heap Sort
+void generate_heap_worst(int n) {
+    srand(time(0));
+    vector<int> arr(n);
+
+    // Initialize array with 1 to n
+    for (int i = 0; i < n; ++i) {
+        arr[i] = i + 1;
+    }
+
+    // Generate one random permutation
+    permute(arr, n);
+    write_to_file(arr, "data.txt");
+    cout << "Generated Heap Sort worst-case data." << endl;
+}
+// insertion sort
+template<class T>
+vector<T> insertsort(vector<T> a, int n) {
+    T temp;
+    for (int i = 1; i < n; i++) {
+        temp = a[i];
+        int j = i - 1;
+        while (j >= 0 && temp < a[j]) {
+            a[j + 1] = a[j];
+            j--;
+        }
+        a[j + 1] = temp;
+    }
+    return a;
+}
+
+// quick sort
+template<class T>
+void quicksortIn(vector<T>& a, const int& front, const int& end) {
+    if (front < end) {
+        int mid = a[(front + end) / 2], pivot;
+        // 取三個數的中間值
+        pivot = front;
+        if ((a[front] >= mid && mid >= a[end]) || (a[front] <= mid && mid <= a[end]))
+            pivot = (front + end) / 2;
+        if ((a[end] >= a[front] && a[end] <= mid) || (a[end] <= a[front] && a[end] >= mid))
+            pivot = end;
+
+        // 將pivot移到最左邊
+        swap(a[front], a[pivot]);
+
+        // 將比pivot小的數移到左邊，比pivot大的數移到右邊
+        int i = front, j = end + 1;
+        do {
+            do i++; while (a[i] < a[front]);
+            do j--; while (a[j] > a[front]);
+            if (i < j) swap(a[i], a[j]);
+        } while (i < j);
+        swap(a[front], a[j]);
+
+        quicksortIn(a, front, j - 1); // 對左邊的數進行排序
+        quicksortIn(a, j + 1, end);   // 對右邊的數進行排序
+    }
+}
+template<class T>
+vector<T> quicksort(vector<T> a, const int& front, const int& end) {
+    quicksortIn(a, front, end);
+    return a;
+}
+// heap sort
+template<class T>
+void maxheapify(vector<T>& a, const int& root, const int& len) {
+    int left = 2 * root + 1;
+    int right = 2 * root + 2;
+    int largest = root;
+
+    if (left < len && a[left] >= a[largest]) {
+        largest = left;
+    }
+
+    if (right < len && a[right] >= a[largest]) {
+        largest = right;
+    }
+
+    if (largest != root) {
+        swap(a[root], a[largest]);
+        maxheapify(a, largest, len);
+    }
+}
+
+// 建立最大堆積樹
+template<class T>
+void maxheap(vector<T>& a) {
+    for (int i = a.size() / 2; i >= 0; i--) {
+        maxheapify(a, i, a.size());
+    }
+}
+
+template<class T>
+vector<int> heapsort(vector<T> a) {
+    int len = a.size();
+    maxheap(a);
+    for (int i = a.size() - 1; i > 0; i--) {
+        swap(a[i], a[0]);
+        // 減掉以排序的長度在找下個最大堆積
+        maxheapify(a, 0, --len);
+    }
+    return a;
+}
+
+// merge sort
+// 將左右陣列合併並排列
+template<class T>
+vector<T> merge(const vector<T>& left, const vector<T>& right) {
+    vector<T> result;
+    int i, j;
+    i = j = 0;
+
+    // 若左陣列和右邊界都還沒到底，繼續比較
+    while (i < left.size() && j < right.size()) {
+        if (left[i] < right[j]) {
+            result.push_back(left[i]);
+            i++;
+        }
+        else {
+            result.push_back(right[j]);
+            j++;
+        }
+    }
+
+    // 將剩下的數值填入結果
+    while (i < left.size())
+        result.push_back(left[i++]);
+    while (j < right.size())
+        result.push_back(right[j++]);
+
+    return result;
+}
+
+template<class T>
+vector<T> mergesort(const vector<T>& a, const int& front, const int& end) {
+    // 只剩一個元素時，回傳單一元素的vector
+    if (front == end)
+    {
+        vector<T> result;
+        result.push_back(a[front]);
+        return result;
+    }
+
+    int mid = (front + end) / 2;
+
+    vector<T> left = mergesort(a, front, mid),
+        right = mergesort(a, mid + 1, end);
+
+    // 合併並排列
+    return merge(left, right);
+}
+
+// 檢查排序是否正確
+template<class T>
+bool checksort(const vector<T>& a, int n) {
+    for (int i = 0; i < n - 1; i++)
+        if (a[i] > a[i + 1]) return false;
+    return true;
+}
+
+int main() {
+    int data=5000;
+    int n;
+    vector<int>  result;
+    double start, stop;
+    vector<int> a = read_data("data.txt",n);
+
+    // 測試插入排序
+
+    generate_insertion_worst(data);
+    a = read_data("data.txt", n);
+    start = clock();
+    result = insertsort(a, n);
+    stop = clock();
+    if (checksort(result, n))
+        cout << "insertsort time:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+
+    // 測試快速排序
+    generate_quick_worst(data);
+    a = read_data("data.txt", n);
+    start = clock();
+    result = quicksort(a, 0, n - 1);
+    stop = clock();
+    if (checksort(result, n))
+        cout << "quicksort time:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+
+    // 測試整合排序
+    generate_merge_worst(data);
+    a = read_data("data.txt", n);
+    start = clock();
+    result = mergesort(a, 0, n - 1);
+    stop = clock();
+    if (checksort(result, n))
+        cout << "mergesort time:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+
+    // 測試堆積排序
+    generate_heap_worst(data);
+    a = read_data("data.txt", n);
+    start = clock();
+    result = heapsort(a);
+    stop = clock();
+    if (checksort(result, n))
+        cout << "heapsort time:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+}
