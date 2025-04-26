@@ -269,7 +269,7 @@ bool checksort(const vector<T>& a, int n) {
 int main() {
 
     //                                                                    最糟狀況
-    int data = 50;
+    int data = 10000;
     int n;
     vector<int>  result;
     double start, stop;
@@ -280,7 +280,7 @@ int main() {
     generate_insertion_worst(data);
     a = read_data("data.txt", n);
     double time = 0, count = 0;
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 55; i++) {
         start = clock();
         result = insertsort(a, n);
         stop = clock();
