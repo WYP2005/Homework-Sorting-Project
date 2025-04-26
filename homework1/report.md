@@ -161,6 +161,14 @@ void heapsort(vector<T>& a){
 
 ## 測試與驗證
 
+###不同排序的時間複雜度
+| 排序演算法 | Best| Worst| Avg| 
+|----------|--------------|--------------|--------------|
+| Insertion Sort   | O(n)  | O($n^2$) | O($n^2$) |
+| Merge Sort   | O(nlogn)  | O(nlogn) | O(nlogn) |
+| Heap Sort   | O(nlogn)   | O(nlogn) | O(nlogn) |
+| Quick Sort   | O(nlogn)  | O($n^2$) | O(nlogn)
+
 ### 時間精確度:s
 
 ### 不同排序最糟情況運行時間
