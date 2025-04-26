@@ -60,14 +60,21 @@ void generate_insertion_worst(int n) {
 }
 
 // Quick Sort worst-case: Sorted array [1, 2, ..., n]
-void generate_quick_worst(int n) {
-    vector<int> data(n);
-    for (int i = 0; i < n; i++) {
-        data[i] = i + 1;
-    }
-    write_to_file(data, "data.txt");
-    //cout << "Generated Quick Sort worst-case data." << endl;
+void anti_quicksort(vector<int>& a, int l, int r, int& cur) {
+    if (l > r) return;
+    int mid = (l + r) / 2;
+    a[mid] = cur--;
+    anti_quicksort(a, l, mid - 1, cur);
+    anti_quicksort(a, mid + 1, r, cur);
 }
+
+void generate_quick_worst(int n) {
+    vector<int> data(n, 0);
+    int cur = n;
+    anti_quicksort(data, 0, n - 1, cur);
+    write_to_file(data, "data.txt");
+}
+
 
 // Generate random permutation for Merge Sort
 void generate_merge_worst(int n) {
@@ -292,27 +299,25 @@ int main() {
     std::cout << "insertsort time:" << time / count << "s" << endl;
     // 測試快速排序
 
-
-    double max_time = 0;
-    for (int i = 0; i < 100; i++) {
-        generate_quick_worst(data);
-        a = read_data("data.txt", n);
+    generate_quick_worst(data);
+    a = read_data("data.txt", n);
+    time = 0, count = 0;
+    for (int i = 0; i < 55; i++) {
         start = clock();
         result = quicksort(a, 0, n - 1);
         stop = clock();
         if (checksort(result, n)) {
-            if (((stop - start) / CLOCKS_PER_SEC) > max_time) {
-                max_time = (stop - start) / CLOCKS_PER_SEC;
-            }
+            time += (stop - start) / CLOCKS_PER_SEC;
+            count++;
         }
     }
-    std::cout << "quicksort time:" << max_time << "s" << endl;
+    std::cout << "quicksort time:" << time / count << "s" << endl;
 
 
 
 
     // 測試整合排序
-    max_time = 0;
+    double max_time = 0;
     for (int i = 0; i < 20; i++) {
         generate_merge_worst(data);
         a = read_data("data.txt", n);
