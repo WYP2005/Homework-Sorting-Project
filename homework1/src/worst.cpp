@@ -56,7 +56,7 @@ void generate_insertion_worst(int n) {
         data[i] = n - i;
     }
     write_to_file(data, "data.txt");
-    cout << "Generated Insertion Sort worst-case data." << endl;
+    //cout << "Generated Insertion Sort worst-case data." << endl;
 }
 
 // Quick Sort worst-case: Sorted array [1, 2, ..., n]
@@ -66,7 +66,7 @@ void generate_quick_worst(int n) {
         data[i] = i + 1;
     }
     write_to_file(data, "data.txt");
-    cout << "Generated Quick Sort worst-case data." << endl;
+    //cout << "Generated Quick Sort worst-case data." << endl;
 }
 
 // Generate random permutation for Merge Sort
@@ -82,7 +82,7 @@ void generate_merge_worst(int n) {
     // Generate one random permutation
     permute(arr, n);
     write_to_file(arr, "data.txt");
-    cout << "Generated Merge Sort worst-case data." << endl;
+    //cout << "Generated Merge Sort worst-case data." << endl;
 }
 
 // Generate random permutation for Heap Sort
@@ -98,7 +98,7 @@ void generate_heap_worst(int n) {
     // Generate one random permutation
     permute(arr, n);
     write_to_file(arr, "data.txt");
-    cout << "Generated Heap Sort worst-case data." << endl;
+    //cout << "Generated Heap Sort worst-case data." << endl;
 }
 // insertion sort
 template<class T>
@@ -247,46 +247,77 @@ bool checksort(const vector<T>& a, int n) {
 }
 
 int main() {
-    int data=5000;
+    int data = 5000;
     int n;
     vector<int>  result;
     double start, stop;
-    vector<int> a = read_data("data.txt",n);
+    vector<int> a = read_data("data.txt", n);
 
     // 測試插入排序
 
     generate_insertion_worst(data);
     a = read_data("data.txt", n);
-    start = clock();
-    result = insertsort(a, n);
-    stop = clock();
-    if (checksort(result, n))
-        cout << "insertsort time:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
-
+    double time = 0, count = 0;
+    for (int i = 0; i < 50; i++) {
+        start = clock();
+        result = insertsort(a, n);
+        stop = clock();
+        if (checksort(result, n)) {
+            time += (stop - start) / CLOCKS_PER_SEC;
+            count++;
+        }
+    }
+    cout << "insertsort time:" << time / count << "s" << endl;
     // 測試快速排序
-    generate_quick_worst(data);
-    a = read_data("data.txt", n);
-    start = clock();
-    result = quicksort(a, 0, n - 1);
-    stop = clock();
-    if (checksort(result, n))
-        cout << "quicksort time:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+
+
+    double max_time = 0;
+    for (int i = 0; i < 50; i++) {
+        generate_quick_worst(data);
+        a = read_data("data.txt", n);
+        start = clock();
+        result = quicksort(a, 0, n - 1);
+        stop = clock();
+        if (checksort(result, n)) {
+            if (((stop - start) / CLOCKS_PER_SEC) > max_time) {
+                max_time = (stop - start) / CLOCKS_PER_SEC;
+            }
+        }
+    }
+    cout << "quicksort time:" << max_time << "s" << endl;
+
+
+
 
     // 測試整合排序
-    generate_merge_worst(data);
-    a = read_data("data.txt", n);
-    start = clock();
-    result = mergesort(a, 0, n - 1);
-    stop = clock();
-    if (checksort(result, n))
-        cout << "mergesort time:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
-
+    double max_time = 0;
+    for (int i = 0; i < 50; i++) {
+        generate_merge_worst(data);
+        a = read_data("data.txt", n);
+        start = clock();
+        result = mergesort(a, 0, n - 1);
+        stop = clock();
+        if (checksort(result, n)) {
+            if (((stop - start) / CLOCKS_PER_SEC) > max_time) {
+                max_time = (stop - start) / CLOCKS_PER_SEC;
+            }
+        }
+    }
+    cout << "mergesort time:" << max_time << "s" << endl;
     // 測試堆積排序
-    generate_heap_worst(data);
-    a = read_data("data.txt", n);
-    start = clock();
-    result = heapsort(a);
-    stop = clock();
-    if (checksort(result, n))
-        cout << "heapsort time:" << (stop - start) / CLOCKS_PER_SEC << "s" << endl;
+
+    max_time = 0;
+    for (int i = 0; i < 50; i++) {
+        generate_heap_worst(data);
+        a = read_data("data.txt", n);
+        start = clock();
+        result = heapsort(a);
+        stop = clock();
+        if (checksort(result, n)) {
+            if (((stop - start) / CLOCKS_PER_SEC) > max_time) {
+                max_time = (stop - start) / CLOCKS_PER_SEC;
+            }
+        }
+    }
+    cout << "heapsort time:" << max_time << "s" << endl;
 }
