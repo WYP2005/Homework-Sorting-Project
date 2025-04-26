@@ -22,42 +22,37 @@ vector<T> insertsort(vector<T> a, int n){
 
 // quick sort
 template<class T>
-vector<T> quicksort(vector<T> a, const int& front, const int& end){
-    if(front >= end)
-    {
-        vector<T> result;
-        result.push_back(a[front]);
-        return result;
+void quicksortIn(vector<T>& a, const int& front, const int& end){
+    if(front < end){
+        int mid = a[(front+end)/2], pivot;
+        // 取三個數的中間值
+        pivot = front;
+        if((a[front] >= mid && mid >= a[end]) || (a[front] <= mid && mid <= a[end]))
+            pivot = (front+end) / 2;
+        if((a[end] >= a[front] && a[end] <= mid) || (a[end] <= a[front] && a[end] >= mid))
+            pivot = end;
+
+        // 將pivot移到最左邊
+        swap(a[front], a[pivot]);
+
+        // 將比pivot小的數移到左邊，比pivot大的數移到右邊
+        int i = front, j = end + 1;
+        do{
+            do i++; while(a[i] < a[front]);
+            do j--; while(a[j] > a[front]);
+            if(i < j) swap(a[i], a[j]);
+        }while(i < j);
+        swap(a[front], a[j]);
+
+        quicksortIn(a, front, j - 1); // 對左邊的數進行排序
+        quicksortIn(a, j + 1, end);   // 對右邊的數進行排序
     }
+}
 
-    int mid = a[(front+end)/2], pivot;
-    // 取三個數的中間值
-    pivot = front;
-    if((a[front] >= mid && mid >= a[end]) || (a[front] <= mid && mid <= a[end]))
-        pivot = (front+end) / 2;
-    if((a[end] >= a[front] && a[end] <= mid) || (a[end] <= a[front] && a[end] >= mid))
-        pivot = end;
-
-    // 將pivot移到最左邊
-    swap(a[front], a[pivot]);
-
-    // 將比pivot小的數移到左邊，比pivot大的數移到右邊
-    int i = front, j = end + 1;
-    do{
-        do i++; while(a[i] < a[front]);
-        do j--; while(a[j] > a[front]);
-        if(i < j) swap(a[i], a[j]);
-    }while(i < j);
-    
-    swap(a[front], a[j]);
-
-    vector<T> left = quicksort(a, front, j - 1);   // 排序左邊
-    vector<T> right = quicksort(a, j + 1, end);    // 排序右邊
-
-    // 合併
-    left.push_back(a[j]);
-    left.insert(left.end(), right.begin(), right.end());
-    return left;
+template<class T>
+vector<T> quicksort(vector<T> a, const int& front, const int& end){
+    quicksortIn(a, front, end);
+    return a;
 }
 
 // heap sort

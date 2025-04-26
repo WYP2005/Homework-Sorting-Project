@@ -9,6 +9,8 @@
         "initializer_list": "cpp",
         "utility": "cpp",
         "iosfwd": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "deque": "cpp",
+        "vector": "cpp"
     }
 }
