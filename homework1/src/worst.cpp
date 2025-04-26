@@ -60,20 +60,20 @@ void generate_insertion_worst(int n) {
 }
 
 // Quick Sort worst-case: Sorted array [1, 2, ..., n]
-void anti_quicksort(vector<int>& a, int l, int r, int& cur) {
-    if (l > r) return;
-    int mid = (l + r) / 2;
-    a[mid] = cur--;
-    anti_quicksort(a, l, mid - 1, cur);
-    anti_quicksort(a, mid + 1, r, cur);
-}
+// void anti_quicksort(vector<int>& a, int l, int r, int& cur) {
+//     if (l > r) return;
+//     int mid = (l + r) / 2;
+//     a[mid] = cur--;
+//     anti_quicksort(a, l, mid - 1, cur);
+//     anti_quicksort(a, mid + 1, r, cur);
+// }
 
-void generate_quick_worst(int n) {
-    vector<int> data(n, 0);
-    int cur = n;
-    anti_quicksort(data, 0, n - 1, cur);
-    write_to_file(data, "data.txt");
-}
+// void generate_quick_worst(int n) {
+//     vector<int> data(n, 0);
+//     int cur = n;
+//     anti_quicksort(data, 0, n - 1, cur);
+//     write_to_file(data, "data.txt");
+// }
 
 
 // Generate random permutation for Merge Sort
@@ -145,14 +145,43 @@ vector<T> insertsort(vector<T> a, int n) {
 
 // quick sort
 template<class T>
-void quicksortIn(vector<T>& a, const int& front, const int& end) {
+void quicksortWorst(vector<T>& a, const int& front, const int& end) {
     if (front < end) {
         int mid = a[(front + end) / 2], pivot;
-        // 取三個數的中間值
+        // 取三個數的最大值
         pivot = front;
-        if ((a[front] >= mid && mid >= a[end]) || (a[front] <= mid && mid <= a[end]))
+        if (mid >= a[front] && mid >= a[end])
             pivot = (front + end) / 2;
-        if ((a[end] >= a[front] && a[end] <= mid) || (a[end] <= a[front] && a[end] >= mid))
+        if ((a[end] >= a[front] && a[end] >= mid))
+            pivot = end;
+
+        // 將pivot移到最左邊
+        swap(a[front], a[pivot]);
+
+        // 將比pivot小的數移到左邊，比pivot大的數移到右邊
+        int i = front, j = end + 1;
+        do {
+            do i++; while (a[i] < a[front]);
+            do j--; while (a[j] > a[front]);
+            if (i < j) swap(a[i], a[j]);
+        } while (i < j);
+        swap(a[front], a[j]);
+
+        quicksortIn(a, front, j - 1); // 對左邊的數進行排序
+        quicksortIn(a, j + 1, end);   // 對右邊的數進行排序
+    }
+}
+
+// quick sort
+template<class T>
+void quicksortNormal(vector<T>& a, const int& front, const int& end) {
+    if (front < end) {
+        int mid = a[(front + end) / 2], pivot;
+        // 取三個數的最大值
+        pivot = front;
+        if((a[front] >= mid && mid >= a[end]) || (a[front] <= mid && mid <= a[end]))
+            pivot = (front+end) / 2;
+        if((a[end] >= a[front] && a[end] <= mid) || (a[end] <= a[front] && a[end] >= mid))
             pivot = end;
 
         // 將pivot移到最左邊
@@ -172,10 +201,14 @@ void quicksortIn(vector<T>& a, const int& front, const int& end) {
     }
 }
 template<class T>
-vector<T> quicksort(vector<T> a, const int& front, const int& end) {
-    quicksortIn(a, front, end);
+vector<T> quicksort(vector<T> a, const int& front, const int& end, const bool& worst) {
+    if(worst)
+        quicksortWorst(a, front, end);
+    else
+        quicksortNormal(a, front, end);
     return a;
 }
+
 // heap sort
 template<class T>
 void maxheapify(vector<T>& a, const int& root, const int& len) {
@@ -275,15 +308,14 @@ bool checksort(const vector<T>& a, int n) {
 
 int main() {
 
-    //                                                                    最糟狀況
-    int data = 10000;
+    // 最糟狀況
+    int data = 100;
     int n;
-    vector<int>  result;
+    vector<int> result;
     double start, stop;
     vector<int> a = read_data("data.txt", n);
 
     // 測試插入排序
-
     generate_insertion_worst(data);
     a = read_data("data.txt", n);
     double time = 0, count = 0;
@@ -297,14 +329,14 @@ int main() {
         }
     }
     std::cout << "insertsort time:" << time / count << "s" << endl;
-    // 測試快速排序
 
-    generate_quick_worst(data);
+    // 測試快速排序
+    // generate_quick_worst(data);
     a = read_data("data.txt", n);
     time = 0, count = 0;
     for (int i = 0; i < 55; i++) {
         start = clock();
-        result = quicksort(a, 0, n - 1);
+        result = quicksort(a, 0, n - 1, true);
         stop = clock();
         if (checksort(result, n)) {
             time += (stop - start) / CLOCKS_PER_SEC;
@@ -312,9 +344,6 @@ int main() {
         }
     }
     std::cout << "quicksort time:" << time / count << "s" << endl;
-
-
-
 
     // 測試整合排序
     double max_time = 0;
@@ -331,8 +360,8 @@ int main() {
         }
     }
     std::cout << "mergesort time:" << max_time << "s" << endl;
-    // 測試堆積排序
 
+    // 測試堆積排序
     max_time = 0;
     for (int i = 0; i < 20; i++) {
         generate_heap_worst(data);
@@ -347,7 +376,8 @@ int main() {
         }
     }
     std::cout << "heapsort time:" << max_time << "s" << endl;
-    //                                                                                                                                 平均狀況      
+
+    // 平均狀況      
     double time2 = 0, count2 = 0;
     double time3 = 0, count3 = 0;
     double time4 = 0, count4 = 0;
@@ -364,7 +394,7 @@ int main() {
             count2++;
         }
         start = clock();
-        result = quicksort(a, 0, n - 1);
+        result = quicksort(a, 0, n - 1, false);
         stop = clock();
         if (checksort(result, n)) {
             time3 += (stop - start) / CLOCKS_PER_SEC;
