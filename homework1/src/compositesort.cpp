@@ -35,7 +35,7 @@ void maxheap(vector<T>& a, const int& left, const int& right){
 }
 
 template<class T>
-void heapsort(vector<T>& a, const int& left, const int& right){
+vector<T> heapsort(vector<T> a, const int& left, const int& right){
     int size = right - left + 1;
     maxheap(a, left, right);
     for(int i = right; i > left; i--){
@@ -43,10 +43,11 @@ void heapsort(vector<T>& a, const int& left, const int& right){
         // 減掉以排序的長度在找下個最大堆積
         maxheapify(a, left, --size);
     }
+    return a;
 }
 
 template<class T>
-void insertsort(vector<T>& a, const int& left, const int& right){
+vector<T> insertsort(vector<T> a, const int& left, const int& right){
     T temp;
     for(int i = left + 1; i <= right; i++){
         temp = a[i];
@@ -57,6 +58,7 @@ void insertsort(vector<T>& a, const int& left, const int& right){
         }
         a[j + 1] = temp;
     }
+    return a;
 }
 
 template<class T>
@@ -66,14 +68,14 @@ void compositesort(vector<T>& a, const int& left, const int& right, int& depth) 
     if (left >= right) return;
 
     // 小數據使用insertSort
-    if (size <= 32) {
-        insertsort(a, left, right);
+    if (size <= 30) {
+        a = insertsort(a, left, right);
         return;
     }
 
     // 遞迴深度過深用heapSort
     if(depth >= 1000){
-        heapsort(a, left, right);
+        a = heapsort(a, left, right);
         return;
     }
 
@@ -123,10 +125,8 @@ int main(){
     compositesort(test, 0, n - 1, depth);
     stop = clock();
 
-    // for(int i = 0; i < n; i++) cout << test[i] << " ";
-    // cout << endl;
-    cout << checksort(test, n) << endl;
-    cout << (stop - start) / CLOCKS_PER_SEC<< endl;
+    if(checksort(test, n))
+        cout << (stop - start) / CLOCKS_PER_SEC<< endl;
 
     in.close();
 }
