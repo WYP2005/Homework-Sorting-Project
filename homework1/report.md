@@ -325,6 +325,9 @@ stop = clock();
 | 測試六   | $n = 4000$     |  0.0392182|0.0133818|  0.005    |0.002     |
 | 測試七   | $n = 5000$     |  0.0600909|0.0208545 |  0.006    |0.003     |
 | 測試八   | $n = 10000$     |  0.238436|0.0834545 |  0.012    |0.004     |
+
+
+
 ![糟糕狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366006624908607509/file-PPAutaiVbPwedQQzcVXx6r.png?ex=680f604e&is=680e0ece&hm=136da17798206a47fe28b8a0eac8aaf64e1e44e1255936174d4ad51fc5b2152d&)
 根據以上測出來的資料可以看出Insertion Sort符合最壞情況(O($n^2$) Quick Sort符合最壞情況(O($n^2$) Merge Sort符合最壞情況O($n log n$)  Heap Sort符合最壞情況O($n log n$)，這4個排序法都複合他們最壞情況的時間複雜度
 
