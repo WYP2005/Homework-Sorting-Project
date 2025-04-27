@@ -8,15 +8,11 @@
 #include <string>
 using namespace std;
 
-void memoryUsage(){
+void memoryUsage(vector<double>& memoryData){
     PROCESS_MEMORY_COUNTERS pmc;
     GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-    cout<<"----------------------------------------------------------"<<endl;
-    cout<<"Memory Usage Information:" << endl;
     cout<<"Working Set Size: "<<pmc.WorkingSetSize / 1024 << " KB" << endl;
     cout<<"Peak Working Set Size: "<<pmc.PeakWorkingSetSize / 1024 << " KB" << endl;
-    cout<<"Pagefile Usage: "<<pmc.PagefileUsage / 1024 << " KB" << endl;
-    cout<<"----------------------------------------------------------"<<endl;
 }
 
 vector<int> read_data(const string& filename, int& n) {
@@ -62,45 +58,6 @@ void permute(vector<int>& arr, int n) {
     }
 }
 
-// Insertion Sort worst-case: [n, n-1, ..., 1]
-void generate_insertion_worst(int n) {
-    vector<int> data(n);
-    for (int i = 0; i < n; i++) {
-        data[i] = n - i;
-    }
-    write_to_file(data, "data.txt");
-}
-
-// Generate random permutation for Merge Sort
-void generate_merge_worst(int n) {
-    srand(time(0));
-    vector<int> arr(n);
-
-    // Initialize array with 1 to n
-    for (int i = 0; i < n; ++i) {
-        arr[i] = i + 1;
-    }
-
-    // Generate one random permutation
-    permute(arr, n);
-    write_to_file(arr, "data.txt");
-}
-
-// Generate random permutation for Heap Sort
-void generate_heap_worst(int n) {
-    srand(time(0));
-    vector<int> arr(n);
-
-    // Initialize array with 1 to n
-    for (int i = 0; i < n; ++i) {
-        arr[i] = i + 1;
-    }
-
-    // Generate one random permutation
-    permute(arr, n);
-    write_to_file(arr, "data.txt");
-}
-
 void generate_random_data(int n) {
     ofstream out("data.txt");
     if (!out.is_open()) {
@@ -127,20 +84,6 @@ vector<T> insertsort(vector<T> a, int n) {
         temp = a[i];
         int j = i - 1;
         while (j >= 0 && temp < a[j]) {
-            a[j + 1] = a[j];
-            j--;
-        }
-        a[j + 1] = temp;
-    }
-    return a;
-}
-template<class T>
-vector<T> insertsort(vector<T> a, const int& left, const int& right){
-    T temp;
-    for(int i = left + 1; i <= right; i++){
-        temp = a[i];
-        int j = i - 1;
-        while(j >= left && temp < a[j]){
             a[j + 1] = a[j];
             j--;
         }
@@ -243,14 +186,6 @@ void maxheap(vector<T>& a) {
         maxheapify(a, i, a.size());
     }
 }
-// 建立最大堆積樹
-template<class T>
-void maxheap(vector<T>& a, const int& left, const int& right){
-    int size = right - left + 1;
-    for(int i = size; i >= left; i--){
-        maxheapify(a, i, size);
-    }
-}
 
 template<class T>
 vector<int> heapsort(vector<T> a) {
@@ -260,18 +195,6 @@ vector<int> heapsort(vector<T> a) {
         swap(a[i], a[0]);
         // 減掉以排序的長度在找下個最大堆積
         maxheapify(a, 0, --len);
-    }
-    return a;
-}
-
-template<class T>
-vector<T> heapsort(vector<T> a, const int& left, const int& right){
-    int size = right - left + 1;
-    maxheap(a, left, right);
-    for(int i = right; i > left; i--){
-        swap(a[i], a[left]);
-        // 減掉以排序的長度在找下個最大堆積
-        maxheapify(a, left, --size);
     }
     return a;
 }
@@ -336,7 +259,11 @@ template<class T>
 void compositesort(vector<T> a, const int& left, const int& right, int& depth) {
     int size = right - left + 1;
 
-    if (left >= right) return;
+    if (left >= right){
+        vector<T> result;
+        result.push_back(a[left]);
+        return result;
+    }
 
     // 小數據使用insertSort
     if (size <= 30) {
@@ -376,122 +303,54 @@ void compositesort(vector<T> a, const int& left, const int& right, int& depth) {
 int main() {
 
     // 最糟狀況
-    int data = 10000;
+    int data[] = {500, 1000, 2000, 3000, 4000, 5000};
     int n;
     vector<int> result;
     double start, stop;
-    vector<int> a = read_data("data.txt", n);
+    vector<int> a;
+    vector<double> memoryData;
+
+    ofstream file("memory_usage.csv");
+    file << "n,InsertsortMemoryUsage,QuicksortMemoryUsage,MeragesortMemoryUsage,HeapsortMemoryUsage \n"; // 標題行
+
+    for(int i = 0; i < sizeof(data)/sizeof(int); i++){
+        n = data[i];
+        generate_random_data(n);
+        cout << n << endl;
+        memoryUsage(memoryData);
+        a = read_data("data.txt", n);
+        result = insertsort(a, n);
+        memoryUsage(memoryData);
+        file << n << "," << memoryData.back() << ",";
+    }
+    for(int i = 0; i < sizeof(data)/sizeof(int); i++){
+        n = data[i];
+        generate_random_data(n);
+        cout << n << endl;
+        memoryUsage(memoryData);
+        a = read_data("data.txt", n);
+        result = quicksort(a, 0, n - 1, false);
+        memoryUsage(memoryData);
+    }
+    for(int i = 0; i < sizeof(data)/sizeof(int); i++){
+        n = data[i];
+        generate_random_data(n);
+        cout << n << endl;
+        memoryUsage(memoryData);
+        a = read_data("data.txt", n);
+        result = insertsort(a, n);
+        memoryUsage(memoryData);
+    }
+    for(int i = 0; i < sizeof(data)/sizeof(int); i++){
+        n = data[i];
+        generate_random_data(n);
+        cout << n << endl;
+        memoryUsage(memoryData);
+        a = read_data("data.txt", n);
+        result = insertsort(a, n);
+        memoryUsage(memoryData);
+    }
 
 
-    // 測試插入排序
-    generate_insertion_worst(data);
-    a = read_data("data.txt", n);
-    double time = 0, count = 0;
-    // memoryUsage();
-    // for (int i = 0; i < 55; i++) {
-    //     start = clock();
-    //     result = insertsort(a, n);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         time += (stop - start) / CLOCKS_PER_SEC;
-    //         count++;
-    //     }
-    // }
-    // memoryUsage();
-    // std::cout << "insertsort time:" << time / count << "s" << endl;
-
-    // 測試快速排序
-    // cout << n << endl;
-    // memoryUsage();
-    // a = read_data("data.txt", n);
-    // time = 0, count = 0;
-    // for (int i = 0; i < 55; i++) {
-    //     start = clock();
-    //     result = quicksort(a, 0, n - 1, true);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         time += (stop - start) / CLOCKS_PER_SEC;
-    //         count++;
-    //     }
-    // }
-    // memoryUsage();
-    // std::cout << "quicksort time:" << time / count << "s" << endl;
-
-    // // 測試整合排序
-    // double max_time = 0;
-    // for (int i = 0; i < 20; i++) {
-    //     generate_merge_worst(data);
-    //     a = read_data("data.txt", n);
-    //     start = clock();
-    //     result = mergesort(a, 0, n - 1);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         if (((stop - start) / CLOCKS_PER_SEC) > max_time) {
-    //             max_time = (stop - start) / CLOCKS_PER_SEC;
-    //         }
-    //     }
-    // }
-    // memoryUsage();
-    // std::cout << "mergesort time:" << max_time << "s" << endl;
-
-    // // 測試堆積排序
-    // max_time = 0;
-    // for (int i = 0; i < 20; i++) {
-    //     generate_heap_worst(data);
-    //     a = read_data("data.txt", n);
-    //     start = clock();
-    //     result = heapsort(a);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         if (((stop - start) / CLOCKS_PER_SEC) > max_time) {
-    //             max_time = (stop - start) / CLOCKS_PER_SEC;
-    //         }
-    //     }
-    // }
-    // memoryUsage();
-    // std::cout << "heapsort time:" << max_time << "s" << endl;
-
-    // 平均狀況      
-    // double time2 = 0, count2 = 0;
-    // double time3 = 0, count3 = 0;
-    // double time4 = 0, count4 = 0;
-    // double time5 = 0,count5= 0;
-	// double time6 = 0, count6 = 0;
-    // for (int i = 0; i < 20; i++) {
-    //     generate_random_data(data);
-    //     a = read_data("data.txt", n);
-    //     start = clock();
-    //     result = insertsort(a, n);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         time2 += (stop - start) / CLOCKS_PER_SEC;
-    //         count2++;
-    //     }
-    //     start = clock();
-    //     result = quicksort(a, 0, n - 1, false);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         time3 += (stop - start) / CLOCKS_PER_SEC;
-    //         count3++;
-    //     }
-    //     start = clock();
-    //     result = mergesort(a, 0, n - 1);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         time4 += (stop - start) / CLOCKS_PER_SEC;
-    //         count4++;
-    //     }
-    //     start = clock();
-    //     result = heapsort(a);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         time5 += (stop - start) / CLOCKS_PER_SEC;
-    //         count5++;
-    //     }
-    // }
-    // std::cout << "insertsort time:" << time2 / count2 << "s" << endl;
-    // std::cout << "quicksort time:" << time3 / count3 << "s" << endl;
-    // std::cout << "mergesort time:" << time4 / count4 << "s" << endl;
-    // std::cout << "heapsort time:" << time5 / count5 << "s" << endl;
-    
+    file.close();
 }
