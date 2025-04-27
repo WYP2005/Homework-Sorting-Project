@@ -203,9 +203,9 @@ stop = clock();
 | 排序演算法 | 最佳效率範圍| 理由 |
 |----------|--------------|----------|
 | Insertion Sort   | 小數據 $n <= 30$      | 小數據處理快速、記憶體占用小        | 
-| Merge Sort   | $n >=       | 各種情況時間複雜度都為O(nlogn)        | 
-| Heap Sort   | 大數據、記憶體占用需少     | 記憶體占用小      | 
-| Quick Sort   | 大數據      | 雖然最糟情況會到O(n^2)，但平均快       | 
+| Merge Sort   | $n >= 2000$     | 各種情況時間複雜度都為O(nlogn)        | 
+| Heap Sort   | $n <= 2000     | 記憶體占用小      | 
+| Quick Sort   | $n >= 500$      | 雖然最糟情況會到O(n^2)，但平均快       | 
 
 ### 不同排序運行平均時間(50組平均)
 | 測試案例 | 輸入參數 $n$ | Insertion Sort | Quick Sort |Merge Sort | Heap Sort |Composite Sorting Function |
