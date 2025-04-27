@@ -12,6 +12,129 @@
 
 
 ## 程式實作
+讀取文字檔案
+
+```cpp
+vector<int> read_data(const string& filename, int& n) {
+    ifstream in;
+    in.open(filename);
+    if (!in.is_open()) {
+        throw runtime_error("Cannot open file: " + filename);
+    }
+
+    // 讀入資料筆數
+    in >> n;
+    vector<int> a(n);
+
+    // 讀入資料
+    for (int i = 0; i < n; i++) {
+        if (!(in >> a[i])) {
+            in.close();
+            throw runtime_error("Invalid data format in file: " + filename);
+        }
+    }
+
+    in.close();
+    return a;
+}
+```
+寫入文字檔案
+
+```cpp
+void write_to_file(const vector<int>& data, const string& filename) {
+    ofstream out(filename);
+    out << data.size() << endl;
+    for (int i = 0; i < data.size(); i++) {
+        out << data[i];
+        if (i < data.size() - 1) out << " ";
+    }
+    out << endl;
+    out.close();
+}
+```
+
+
+生成insertion最糟糕的資料
+
+```cpp
+void generate_insertion_worst(int n) {
+    vector<int> data(n);
+    for (int i = 0; i < n; i++) {
+        data[i] = n - i;
+    }
+    write_to_file(data, "data.txt");
+}
+}
+```
+
+merge和heap的前置生成函數
+
+
+```cpp
+void permute(vector<int>& arr, int n) {
+    for (int i = n - 1; i >= 1; --i) {
+        int j = rand() % (i + 1); // Random index from 0 to i
+        swap(arr[i], arr[j]);
+    }
+}
+```
+生成merge最糟糕資料
+
+```cpp
+void generate_merge_worst(int n) {
+    srand(time(0));
+    vector<int> arr(n);
+
+    // Initialize array with 1 to n
+    for (int i = 0; i < n; ++i) {
+        arr[i] = i + 1;
+    }
+
+    // Generate one random permutation
+    permute(arr, n);
+    write_to_file(arr, "data.txt");
+}
+```
+生成heap最糟資料
+
+```cpp
+void generate_heap_worst(int n) {
+    srand(time(0));
+    vector<int> arr(n);
+
+    // Initialize array with 1 to n
+    for (int i = 0; i < n; ++i) {
+        arr[i] = i + 1;
+    }
+
+    // Generate one random permutation
+    permute(arr, n);
+    write_to_file(arr, "data.txt");
+}
+```
+
+生成隨機資料
+
+```cpp
+void generate_random_data(int n) {
+    ofstream out("data.txt");
+    if (!out.is_open()) {
+        cerr << "無法開啟檔案: " << "data.txt" << endl;
+        return;
+    }
+
+    srand(time(NULL)); // 設定隨機種子
+
+    out << n << endl; // 寫入資料筆數
+    for (int i = 0; i < n; i++) {
+        out << rand() % n << " ";
+    }
+    out << endl;
+
+    out.close();
+}
+```
+
 
 Insertion Sort
 
