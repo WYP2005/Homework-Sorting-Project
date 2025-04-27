@@ -208,7 +208,7 @@ stop = clock();
 | Quick Sort   | 大數據      | 雖然最糟情況會到O(n^2)，但平均快       | 
 
 ### 不同排序運行平均時間(50組平均)
-| 測試案例 | 輸入參數 $n$ | Insertion Sort | Quick Sortt |Merge Sort | Heap Sort |Composite Sorting Function |
+| 測試案例 | 輸入參數 $n$ | Insertion Sort | Quick Sort |Merge Sort | Heap Sort |Composite Sorting Function |
 |----------|--------------|----------|----------|----------|----------|----------|
 | 測試一   | $n = 30$      | 0        | 0        |0.0001      |0         |0.00006       |
 | 測試二   | $n = 500$     | 0.00055  | 0.0001   |0.0016      |0.00025   |0.00014        |
