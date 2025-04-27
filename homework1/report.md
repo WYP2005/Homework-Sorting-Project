@@ -158,6 +158,14 @@ void heapsort(vector<T>& a){
 
 ## 測試與驗證
 
+### 不同排序的空間複雜度
+| 排序演算法 | 空間複雜度| 
+|----------|--------------|
+| Insertion Sort   | O($1$) |
+| Merge Sort   | O($n log n$)|
+| Heap Sort   | O($n log n$) |
+| Quick Sort   | O($n log n$)
+
 ### 不同排序的時間複雜度
 | 排序演算法 | Best| Worst| Avg| 
 |----------|--------------|--------------|--------------|
