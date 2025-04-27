@@ -352,6 +352,8 @@ stop = clock();
 | 測試九   | $n = 30000$   | 0.80815  | 0.0043   |0.0202     |0.00785   |0.00831579        |
 | 測試十   | $n = 50000$   | 2.40035  | 0.0079   |0.0384      |0.0149   |0.0152105        |
 
+
+
 ![平均狀況折線圖insertion對照右邊Y軸](https://cdn.discordapp.com/attachments/930060410823016509/1366046571715887254/j8415DSXZWdUAAAAABJRU5ErkJggg.png?ex=680f8582&is=680e3402&hm=6ed32e47b22cf51cdf19ef561eff8ef93dc722590455389fb29e80b38b7a3569&)
 
 根據以上測出來的資料可以看出Insertion Sort符合平均情況(O($n^2$) Quick Sort符合平均情況O($n log n$) Merge Sort符合平均情況O($n log n$)  Heap Sort符合平均情況O($n log n$)，這4個排序法都符合他們平均情況下的時間複雜度
