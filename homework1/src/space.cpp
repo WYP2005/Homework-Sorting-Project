@@ -1,18 +1,26 @@
 #include <iostream>
-#include <Windows.h>
-#include <Psapi.h>
+#include <cmath>
 #include <fstream>
 #include <vector>
 #include <ctime>
 #include <cstdlib>
 #include <string>
+#include <algorithm>
 using namespace std;
 
-void memoryUsage(vector<double>& memoryData){
-    PROCESS_MEMORY_COUNTERS pmc;
-    GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-    cout<<"Working Set Size: "<<pmc.WorkingSetSize / 1024 << " KB" << endl;
-    cout<<"Peak Working Set Size: "<<pmc.PeakWorkingSetSize / 1024 << " KB" << endl;
+size_t max_memory_usage = 0;
+
+// 取得當前記憶體使用量
+template<class T>
+size_t memory_of_vector(const vector<T>& v) {
+    return v.capacity() * sizeof(T);
+}
+
+// 更新最大記憶體使用量
+void update_max_memory(size_t memory) {
+    if (memory > max_memory_usage) {
+        max_memory_usage = memory;
+    }
 }
 
 vector<int> read_data(const string& filename, int& n) {
@@ -80,6 +88,10 @@ void generate_random_data(int n) {
 template<class T>
 vector<T> insertsort(vector<T> a, int n) {
     T temp;
+
+    // 更新最大記憶體使用量
+    update_max_memory(sizeof(temp));
+
     for (int i = 1; i < n; i++) {
         temp = a[i];
         int j = i - 1;
@@ -94,18 +106,18 @@ vector<T> insertsort(vector<T> a, int n) {
 
 // quick sort
 template<class T>
-void quicksortWorst(vector<T>& a, const int& front, const int& end) {
+void quicksortWorst(vector<T>& a, const int& front, const int& end, int depth) {
     if (front < end) {
-        int mid = a[(front + end) / 2], pivot;
-        // 取三個數的最大值
-        pivot = front;
-        if (mid >= a[front] && mid >= a[end])
-            pivot = (front + end) / 2;
-        if ((a[end] >= a[front] && a[end] >= mid))
-            pivot = end;
+        // 更新最大記憶體使用量
+        update_max_memory(depth * 2 * sizeof(int));
 
+        // 取三個數的最大值
+        int mid = (front + end) / 2;
+        if (a[mid] < a[front]) swap(a[front], a[mid]);
+        if (a[end] < a[front]) swap(a[front], a[end]);
+        if (a[mid] < a[end]) swap(a[mid], a[end]);
         // 將pivot移到最左邊
-        swap(a[front], a[pivot]);
+        swap(a[front], a[end]);
 
         // 將比pivot小的數移到左邊，比pivot大的數移到右邊
         int i = front, j = end + 1;
@@ -116,25 +128,26 @@ void quicksortWorst(vector<T>& a, const int& front, const int& end) {
         } while (i < j);
         swap(a[front], a[j]);
 
-        quicksortWorst(a, front, j - 1); // 對左邊的數進行排序
-        quicksortWorst(a, j + 1, end);   // 對右邊的數進行排序
+        quicksortWorst(a, front, j - 1, depth+1); // 對左邊的數進行排序
+        quicksortWorst(a, j + 1, end, depth+1);   // 對右邊的數進行排序
     }
 }
 
 // quick sort
 template<class T>
-void quicksortNormal(vector<T>& a, const int& front, const int& end) {
+void quicksortNormal(vector<T>& a, const int& front, const int& end, int depth) {
     if (front < end) {
-        int mid = a[(front + end) / 2], pivot;
+        // 更新最大記憶體使用量
+        update_max_memory(depth * 4 * sizeof(int));
+
         // 取三個數的最大值
-        pivot = front;
-        if((a[front] >= mid && mid >= a[end]) || (a[front] <= mid && mid <= a[end]))
-            pivot = (front+end) / 2;
-        if((a[end] >= a[front] && a[end] <= mid) || (a[end] <= a[front] && a[end] >= mid))
-            pivot = end;
+        int mid = (front + end) / 2;
+        if (a[mid] < a[front]) swap(a[front], a[mid]);
+        if (a[end] < a[front]) swap(a[front], a[end]);
+        if (a[mid] < a[end]) swap(a[mid], a[end]);
 
         // 將pivot移到最左邊
-        swap(a[front], a[pivot]);
+        swap(a[front], a[end]);
 
         // 將比pivot小的數移到左邊，比pivot大的數移到右邊
         int i = front, j = end + 1;
@@ -145,16 +158,16 @@ void quicksortNormal(vector<T>& a, const int& front, const int& end) {
         } while (i < j);
         swap(a[front], a[j]);
 
-        quicksortNormal(a, front, j - 1); // 對左邊的數進行排序
-        quicksortNormal(a, j + 1, end);   // 對右邊的數進行排序
+        quicksortNormal(a, front, j - 1, depth+1); // 對左邊的數進行排序
+        quicksortNormal(a, j + 1, end, depth+1);   // 對右邊的數進行排序
     }
 }
 template<class T>
 vector<T> quicksort(vector<T> a, const int& front, const int& end, const bool& worst) {
     if(worst)
-        quicksortWorst(a, front, end);
+        quicksortWorst(a, front, end, 1);
     else
-        quicksortNormal(a, front, end);
+        quicksortNormal(a, front, end, 1);
     return a;
 }
 
@@ -164,6 +177,9 @@ void maxheapify(vector<T>& a, const int& root, const int& len) {
     int left = 2 * root + 1;
     int right = 2 * root + 2;
     int largest = root;
+
+    // 更新最大記憶體使用量
+    update_max_memory(3 * sizeof(int)); 
 
     if (left < len && a[left] >= a[largest]) {
         largest = left;
@@ -204,6 +220,7 @@ vector<int> heapsort(vector<T> a) {
 template<class T>
 vector<T> merge(const vector<T>& left, const vector<T>& right) {
     vector<T> result;
+    result.reserve(left.size() + right.size());
     int i, j;
     i = j = 0;
 
@@ -225,25 +242,29 @@ vector<T> merge(const vector<T>& left, const vector<T>& right) {
     while (j < right.size())
         result.push_back(right[j++]);
 
+    // 更新記憶體使用量
+    size_t current_memory = memory_of_vector(left) + memory_of_vector(right);
+    if (current_memory > max_memory_usage) {
+        max_memory_usage = current_memory;
+    }
+
     return result;
 }
 
 template<class T>
-vector<T> mergesort(const vector<T>& a, const int& front, const int& end) {
+vector<T> mergesort(vector<T>& a, const int& front, const int& end) {
     // 只剩一個元素時，回傳單一元素的vector
-    if (front == end)
-    {
-        vector<T> result;
-        result.push_back(a[front]);
-        return result;
+    if (front >= end) {
+        vector<T> single = { a[front] };
+        return single;
     }
 
     int mid = (front + end) / 2;
+    vector<T> left = mergesort(a, front, mid);
+    vector<T> right = mergesort(a, mid + 1, end);
 
-    vector<T> left = mergesort(a, front, mid),
-        right = mergesort(a, mid + 1, end);
-
-    // 合併並排列
+    size_t current_memory = memory_of_vector(left) + memory_of_vector(right);
+    update_max_memory(current_memory);
     return merge(left, right);
 }
 
@@ -272,7 +293,7 @@ void compositesort(vector<T> a, const int& left, const int& right, int& depth) {
     }
 
     // 遞迴深度過深用heapSort
-    if(depth >= 1000){
+    if(depth >= log2(a.size())){
         a = heapsort(a, left, right);
         return;
     }
@@ -305,52 +326,39 @@ int main() {
     // 最糟狀況
     int data[] = {500, 1000, 2000, 3000, 4000, 5000};
     int n;
-    vector<int> result;
-    double start, stop;
+    double initMemory;
     vector<int> a;
     vector<double> memoryData;
-
+    
     ofstream file("memory_usage.csv");
     file << "n,InsertsortMemoryUsage,QuicksortMemoryUsage,MeragesortMemoryUsage,HeapsortMemoryUsage \n"; // 標題行
 
     for(int i = 0; i < sizeof(data)/sizeof(int); i++){
         n = data[i];
+        cout << "n = " << n << endl;
+        file << n << ",";
         generate_random_data(n);
-        cout << n << endl;
-        memoryUsage(memoryData);
         a = read_data("data.txt", n);
-        result = insertsort(a, n);
-        memoryUsage(memoryData);
-        file << n << "," << memoryData.back() << ",";
-    }
-    for(int i = 0; i < sizeof(data)/sizeof(int); i++){
-        n = data[i];
-        generate_random_data(n);
-        cout << n << endl;
-        memoryUsage(memoryData);
-        a = read_data("data.txt", n);
-        result = quicksort(a, 0, n - 1, false);
-        memoryUsage(memoryData);
-    }
-    for(int i = 0; i < sizeof(data)/sizeof(int); i++){
-        n = data[i];
-        generate_random_data(n);
-        cout << n << endl;
-        memoryUsage(memoryData);
-        a = read_data("data.txt", n);
-        result = insertsort(a, n);
-        memoryUsage(memoryData);
-    }
-    for(int i = 0; i < sizeof(data)/sizeof(int); i++){
-        n = data[i];
-        generate_random_data(n);
-        cout << n << endl;
-        memoryUsage(memoryData);
-        a = read_data("data.txt", n);
-        result = insertsort(a, n);
-        memoryUsage(memoryData);
-    }
+        
+        max_memory_usage = 0;
+        insertsort(a, n);
+        cout << "Insertsort memory usage: " << max_memory_usage << " B" << endl;
+        file << max_memory_usage << ",";
 
+        max_memory_usage = 0;
+        quicksort(a, 0, n - 1, false);
+        cout << "Quicksort memory usage: " << max_memory_usage << " B" << endl;
+        file << max_memory_usage << ",";
 
+        max_memory_usage = 0;
+        mergesort(a, 0, n - 1);
+        cout << "Mergesort memory usage: " << max_memory_usage << " B" << endl;  
+        file << max_memory_usage << ",";
+
+        max_memory_usage = 0;
+        heapsort(a);
+        cout << "Heapsort memory usage: " << max_memory_usage << " B" << endl;
+        file << max_memory_usage << "," << endl;
+    }
     file.close();
 }

@@ -1,23 +1,12 @@
 #include <iostream>
-#include <Windows.h>
-#include <Psapi.h>
+#include <cmath>
 #include <fstream>
 #include <vector>
 #include <ctime>
 #include <cstdlib>
 #include <string>
+#include <algorithm>
 using namespace std;
-
-void memoryUsage(){
-    PROCESS_MEMORY_COUNTERS pmc;
-    GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-    cout<<"----------------------------------------------------------"<<endl;
-    cout<<"Memory Usage Information:" << endl;
-    cout<<"Working Set Size: "<<pmc.WorkingSetSize / 1024 << " KB" << endl;
-    cout<<"Peak Working Set Size: "<<pmc.PeakWorkingSetSize / 1024 << " KB" << endl;
-    cout<<"Pagefile Usage: "<<pmc.PagefileUsage / 1024 << " KB" << endl;
-    cout<<"----------------------------------------------------------"<<endl;
-}
 
 vector<int> read_data(const string& filename, int& n) {
     ifstream in;
@@ -26,11 +15,11 @@ vector<int> read_data(const string& filename, int& n) {
         throw runtime_error("Cannot open file: " + filename);
     }
 
-    // 讀入資料筆數
+    // Ū�J��Ƶ���
     in >> n;
     vector<int> a(n);
 
-    // 讀入資料
+    // Ū�J���
     for (int i = 0; i < n; i++) {
         if (!(in >> a[i])) {
             in.close();
@@ -104,13 +93,13 @@ void generate_heap_worst(int n) {
 void generate_random_data(int n) {
     ofstream out("data.txt");
     if (!out.is_open()) {
-        cerr << "無法開啟檔案: " << "data.txt" << endl;
+        cerr << "�L�k�}���ɮ�: " << "data.txt" << endl;
         return;
     }
 
-    srand(time(NULL)); // 設定隨機種子
+    srand(time(NULL)); // �]�w�H���ؤl
 
-    out << n << endl; // 寫入資料筆數
+    out << n << endl; // �g�J��Ƶ���
     for (int i = 0; i < n; i++) {
         out << rand() % n << " ";
     }
@@ -135,12 +124,12 @@ vector<T> insertsort(vector<T> a, int n) {
     return a;
 }
 template<class T>
-vector<T> insertsort(vector<T> a, const int& left, const int& right){
+vector<T> insertsort(vector<T> a, const int& left, const int& right) {
     T temp;
-    for(int i = left + 1; i <= right; i++){
+    for (int i = left + 1; i <= right; i++) {
         temp = a[i];
         int j = i - 1;
-        while(j >= left && temp < a[j]){
+        while (j >= left && temp < a[j]) {
             a[j + 1] = a[j];
             j--;
         }
@@ -154,17 +143,17 @@ template<class T>
 void quicksortWorst(vector<T>& a, const int& front, const int& end) {
     if (front < end) {
         int mid = a[(front + end) / 2], pivot;
-        // 取三個數的最大值
+        // ���T�Ӽƪ��̤j��
         pivot = front;
         if (mid >= a[front] && mid >= a[end])
             pivot = (front + end) / 2;
         if ((a[end] >= a[front] && a[end] >= mid))
             pivot = end;
 
-        // 將pivot移到最左邊
+        // �Npivot����̥���
         swap(a[front], a[pivot]);
 
-        // 將比pivot小的數移到左邊，比pivot大的數移到右邊
+        // �N��pivot�p���Ʋ��쥪��A��pivot�j���Ʋ���k��
         int i = front, j = end + 1;
         do {
             do i++; while (a[i] < a[front]);
@@ -173,8 +162,8 @@ void quicksortWorst(vector<T>& a, const int& front, const int& end) {
         } while (i < j);
         swap(a[front], a[j]);
 
-        quicksortWorst(a, front, j - 1); // 對左邊的數進行排序
-        quicksortWorst(a, j + 1, end);   // 對右邊的數進行排序
+        quicksortWorst(a, front, j - 1); // �索�䪺�ƶi��Ƨ�
+        quicksortWorst(a, j + 1, end);   // ��k�䪺�ƶi��Ƨ�
     }
 }
 
@@ -182,18 +171,13 @@ void quicksortWorst(vector<T>& a, const int& front, const int& end) {
 template<class T>
 void quicksortNormal(vector<T>& a, const int& front, const int& end) {
     if (front < end) {
-        int mid = a[(front + end) / 2], pivot;
-        // 取三個數的最大值
-        pivot = front;
-        if((a[front] >= mid && mid >= a[end]) || (a[front] <= mid && mid <= a[end]))
-            pivot = (front+end) / 2;
-        if((a[end] >= a[front] && a[end] <= mid) || (a[end] <= a[front] && a[end] >= mid))
-            pivot = end;
+        int mid = (front + end) / 2;
+        if (a[mid] < a[front]) swap(a[front], a[mid]);
+        if (a[end] < a[front]) swap(a[front], a[end]);
+        if (a[mid] < a[end]) swap(a[mid], a[end]);
+        swap(a[front], a[end]);
 
-        // 將pivot移到最左邊
-        swap(a[front], a[pivot]);
-
-        // 將比pivot小的數移到左邊，比pivot大的數移到右邊
+        // �N��pivot�p���Ʋ��쥪��A��pivot�j���Ʋ���k��
         int i = front, j = end + 1;
         do {
             do i++; while (a[i] < a[front]);
@@ -202,13 +186,13 @@ void quicksortNormal(vector<T>& a, const int& front, const int& end) {
         } while (i < j);
         swap(a[front], a[j]);
 
-        quicksortNormal(a, front, j - 1); // 對左邊的數進行排序
-        quicksortNormal(a, j + 1, end);   // 對右邊的數進行排序
+        quicksortNormal(a, front, j - 1); // �索�䪺�ƶi��Ƨ�
+        quicksortNormal(a, j + 1, end);   // ��k�䪺�ƶi��Ƨ�
     }
 }
 template<class T>
 vector<T> quicksort(vector<T> a, const int& front, const int& end, const bool& worst) {
-    if(worst)
+    if (worst)
         quicksortWorst(a, front, end);
     else
         quicksortNormal(a, front, end);
@@ -217,58 +201,18 @@ vector<T> quicksort(vector<T> a, const int& front, const int& end, const bool& w
 
 // heap sort
 template<class T>
-void maxheapify(vector<T>& a, const int& root, const int& len) {
-    int left = 2 * root + 1;
-    int right = 2 * root + 2;
+void maxheapify(vector<T>& a, int root, int left, int right) {
+    int l = 2 * (root - left) + 1 + left; 
+    int r = 2 * (root - left) + 2 + left; 
     int largest = root;
 
-    if (left < len && a[left] >= a[largest]) {
-        largest = left;
-    }
-
-    if (right < len && a[right] >= a[largest]) {
-        largest = right;
-    }
-
-    if (largest != root) {
-        swap(a[root], a[largest]);
-        maxheapify(a, largest, len);
-    }
-}
-
-// 建立最大堆積樹
-template<class T>
-void maxheap(vector<T>& a) {
-    for (int i = a.size() / 2; i >= 0; i--) {
-        maxheapify(a, i, a.size());
-    }
-}
-
-template<class T>
-vector<int> heapsort(vector<T> a) {
-    int len = a.size();
-    maxheap(a);
-    for (int i = a.size() - 1; i > 0; i--) {
-        swap(a[i], a[0]);
-        // 減掉以排序的長度在找下個最大堆積
-        maxheapify(a, 0, --len);
-    }
-    return a;
-}
-
-template<class T>
-void maxheapify(vector<T>& a, const int& root, const int& left, const int& right){
-    int l = 2 * root + 1; // left child
-    int r = 2 * root + 2; // right child
-    int largest = root;
-
-    // 如果左子樹存在且大於根節點
-    if (l <= right && l >= left && a[l] > a[largest]) {
+    // 檢查左子節點是否在範圍內且大於當前最大值
+    if (l <= right && a[l] > a[largest]) {
         largest = l;
     }
 
-    // 如果右子樹存在且大於根節點
-    if (r <= right && r >= left && a[r] > a[largest]) {
+    // 檢查右子節點是否在範圍內且大於當前最大值
+    if (r <= right && a[r] > a[largest]) {
         largest = r;
     }
 
@@ -279,37 +223,39 @@ void maxheapify(vector<T>& a, const int& root, const int& left, const int& right
     }
 }
 
-// 建立最大堆積樹
+// 建立最大堆積
 template<class T>
-void maxheap(vector<T>& a, const int& left, const int& right){
-    int size = right - left + 1;
-    for (int i = (right - 1) / 2; i >= left; i--) {
+void maxheap(vector<T>& a, int left, int right) {
+    // 從最後一個非葉節點開始，逐一調整
+    for (int i = (right - left) / 2 + left; i >= left; i--) {
         maxheapify(a, i, left, right);
     }
 }
 
+// Heap Sort 主函數
 template<class T>
-vector<T> heapsort(vector<T> a, const int& left, const int& right){
-    int size = right - left + 1;
+vector<T> heapsort(vector<T> a, int left, int right) {
+    if (left >= right || left < 0 || right >= a.size()) {
+        return a; // 無效範圍，直接返回
+    }
+
     maxheap(a, left, right); // 建立最大堆積
     for (int i = right; i > left; i--) {
-        // 將當前最大元素交換到右邊
-        swap(a[left], a[i]);
-        // 再次調整堆積
-        maxheapify(a, left, left, i - 1);
+        swap(a[left], a[i]); // 將最大元素放到範圍末端
+        maxheapify(a, left, left, i - 1); // 調整剩餘部分
     }
     return a;
 }
 
 // merge sort
-// 將左右陣列合併並排列
+// �N���k�}�C�X�֨ñƦC
 template<class T>
 vector<T> merge(const vector<T>& left, const vector<T>& right) {
     vector<T> result;
     int i, j;
     i = j = 0;
 
-    // 若左陣列和右邊界都還沒到底，繼續比較
+    // �Y���}�C�M�k��ɳ��٨S�쩳�A�~����
     while (i < left.size() && j < right.size()) {
         if (left[i] < right[j]) {
             result.push_back(left[i]);
@@ -321,7 +267,7 @@ vector<T> merge(const vector<T>& left, const vector<T>& right) {
         }
     }
 
-    // 將剩下的數值填入結果
+    // �N�ѤU���ƭȶ�J���G
     while (i < left.size())
         result.push_back(left[i++]);
     while (j < right.size())
@@ -332,7 +278,7 @@ vector<T> merge(const vector<T>& left, const vector<T>& right) {
 
 template<class T>
 vector<T> mergesort(const vector<T>& a, const int& front, const int& end) {
-    // 只剩一個元素時，回傳單一元素的vector
+    // �u�Ѥ@�Ӥ����ɡA�^�ǳ�@������vector
     if (front == end)
     {
         vector<T> result;
@@ -345,11 +291,11 @@ vector<T> mergesort(const vector<T>& a, const int& front, const int& end) {
     vector<T> left = mergesort(a, front, mid),
         right = mergesort(a, mid + 1, end);
 
-    // 合併並排列
+    // �X�֨ñƦC
     return merge(left, right);
 }
 
-// 檢查排序是否正確
+// �ˬd�ƧǬO�_���T
 template<class T>
 bool checksort(const vector<T>& a, int n) {
     for (int i = 0; i < n - 1; i++)
@@ -358,60 +304,58 @@ bool checksort(const vector<T>& a, int n) {
 }
 
 template<class T>
-void compositesort(vector<T> a, const int& left, const int& right, int& depth) {
+void compositesort(vector<T>& a, const int& left, const int& right, int depth) {
     int size = right - left + 1;
 
     if (left >= right) return;
 
-    // 小數據使用insertSort
+    // �p�ƾڨϥ�insertSort
     if (size <= 30) {
         a = insertsort(a, left, right);
         return;
     }
 
-    // 遞迴深度過深用heapSort
-    if(depth >= 1000){
+    // ���j�`�׹L�`��heapSort
+    if (depth >= log2(a.size())) {
         a = heapsort(a, left, right);
         return;
     }
 
-    // 預設使用quickSort
-    // 取三個數的中間值
-    int mid = a[(left+right)/2], pivot = left;
-    if((a[left] >= mid && mid >= a[right]) || (a[left] <= mid && mid <= a[right]))
-        pivot = (left+right) / 2;
-    if((a[right] >= a[left] && a[right] <= mid) || (a[right] <= a[left] && a[right] >= mid))
-        pivot = right;
+    // �w�]�ϥ�quickSort
+    // ���T�Ӽƪ�������
+    int mid = (left + right) / 2;
+    if (a[mid] < a[left]) swap(a[left], a[mid]);
+    if (a[right] < a[left]) swap(a[left], a[right]);
+    if (a[mid] < a[right]) swap(a[mid], a[right]);
+    swap(a[left], a[right]);
 
-    // 將pivot移到最左邊
-    swap(a[left], a[pivot]);
     int i = left, j = right + 1;
-    do{
-        do i++; while(a[i] < a[left]);
-        do j--; while(a[j] > a[left]);
-        if(i < j) swap(a[i], a[j]);
-    }while(i < j);
-    
+    do {
+        do i++; while (a[i] < a[left]);
+        do j--; while (a[j] > a[left]);
+        if (i < j) swap(a[i], a[j]);
+    } while (i < j);
+
     swap(a[left], a[j]);
 
-    compositesort(a, left, j - 1, ++depth);
-    compositesort(a, j + 1, right, ++depth);
+    compositesort(a, left, j - 1, depth+1);
+    compositesort(a, j + 1, right, depth+1);
 }
 
 int main() {
 
-    // 最糟狀況
-    int data = 10000;
+    // ���V���p
+    int data = 30000;
     int n;
     vector<int> result;
     double start, stop;
     vector<int> a = read_data("data.txt", n);
 
 
-    // 測試插入排序
-    generate_insertion_worst(data);
-    a = read_data("data.txt", n);
-    double time = 0, count = 0;
+    // ���մ��J�Ƨ�
+    // generate_insertion_worst(data);
+    // a = read_data("data.txt", n);
+    //double time = 0, count = 0;
     // memoryUsage();
     // for (int i = 0; i < 55; i++) {
     //     start = clock();
@@ -425,7 +369,7 @@ int main() {
     // memoryUsage();
     // std::cout << "insertsort time:" << time / count << "s" << endl;
 
-    // 測試快速排序
+    // ���էֳt�Ƨ�
     // cout << n << endl;
     // memoryUsage();
     // a = read_data("data.txt", n);
@@ -442,7 +386,7 @@ int main() {
     // memoryUsage();
     // std::cout << "quicksort time:" << time / count << "s" << endl;
 
-    // // 測試整合排序
+    // // ���վ�X�Ƨ�
     // double max_time = 0;
     // for (int i = 0; i < 20; i++) {
     //     generate_merge_worst(data);
@@ -459,7 +403,7 @@ int main() {
     // memoryUsage();
     // std::cout << "mergesort time:" << max_time << "s" << endl;
 
-    // // 測試堆積排序
+    // // ���հ�n�Ƨ�
     // max_time = 0;
     // for (int i = 0; i < 20; i++) {
     //     generate_heap_worst(data);
@@ -476,47 +420,69 @@ int main() {
     // memoryUsage();
     // std::cout << "heapsort time:" << max_time << "s" << endl;
 
-    // 平均狀況      
-    // double time2 = 0, count2 = 0;
-    // double time3 = 0, count3 = 0;
-    // double time4 = 0, count4 = 0;
-    // double time5 = 0,count5= 0;
-	// double time6 = 0, count6 = 0;
-    // for (int i = 0; i < 20; i++) {
-    //     generate_random_data(data);
-    //     a = read_data("data.txt", n);
-    //     start = clock();
-    //     result = insertsort(a, n);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         time2 += (stop - start) / CLOCKS_PER_SEC;
-    //         count2++;
-    //     }
-    //     start = clock();
-    //     result = quicksort(a, 0, n - 1, false);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         time3 += (stop - start) / CLOCKS_PER_SEC;
-    //         count3++;
-    //     }
-    //     start = clock();
-    //     result = mergesort(a, 0, n - 1);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         time4 += (stop - start) / CLOCKS_PER_SEC;
-    //         count4++;
-    //     }
-    //     start = clock();
-    //     result = heapsort(a);
-    //     stop = clock();
-    //     if (checksort(result, n)) {
-    //         time5 += (stop - start) / CLOCKS_PER_SEC;
-    //         count5++;
-    //     }
-    // }
-    // std::cout << "insertsort time:" << time2 / count2 << "s" << endl;
-    // std::cout << "quicksort time:" << time3 / count3 << "s" << endl;
-    // std::cout << "mergesort time:" << time4 / count4 << "s" << endl;
-    // std::cout << "heapsort time:" << time5 / count5 << "s" << endl;
-    
+
+    // �������p      
+    // generate_random_data(data);
+
+    double time2 = 0, count2 = 0;
+    double time3 = 0, count3 = 0;
+    double time4 = 0, count4 = 0;
+    double time5 = 0,count5= 0;
+    double time6 = 0, count6 = 0;
+    double time7 = 0, count7 = 0;
+
+    for (int i = 0; i < 20; i++) {
+        generate_random_data(data);
+        a = read_data("data.txt", n);
+        start = clock();
+        result = insertsort(a, n);
+        stop = clock();
+        if (checksort(result, n)) {
+            time2 += (stop - start) / CLOCKS_PER_SEC;
+            count2++;
+        }
+        start = clock();
+        result = quicksort(a, 0, n - 1, false);
+        stop = clock();
+        if (checksort(result, n)) {
+            time3 += (stop - start) / CLOCKS_PER_SEC;
+            count3++;
+        }
+        start = clock();
+        result = mergesort(a, 0, n - 1);
+        stop = clock();
+        if (checksort(result, n)) {
+            time4 += (stop - start) / CLOCKS_PER_SEC;
+            count4++;
+        }
+        start = clock();
+        result = heapsort(a, 0, n - 1);
+        stop = clock();
+        if (checksort(result, n)) {
+            time5 += (stop - start) / CLOCKS_PER_SEC;
+            count5++;
+        }
+        vector<int> a2 = a;
+        start = clock();
+        compositesort(a2,0,n-1,1);
+        stop = clock();
+        if (checksort(a2, n)) {
+            time6 += (stop - start) / CLOCKS_PER_SEC;
+            count6++;
+        }
+        start = clock();
+        sort(a.begin(),a.end());
+        stop = clock();
+        if (checksort(a, n)) {
+            time7 += (stop - start) / CLOCKS_PER_SEC;
+            count7++;
+        }
+    }
+     
+    std::cout << "insertsort time:" << time2 / count2 << "s" << endl;
+    std::cout << "quicksort time:" << time3 / count3 << "s" << endl;
+    std::cout << "mergesort time:" << time4 / count4 << "s" << endl;
+    std::cout << "heapsort time:" << time5 / count5 << "s" << endl;
+    std::cout << "compositesort time:" << time6 / count6 << "s" << endl;
+    std::cout << "sort time:" << time7 / count7 << "s" << endl;
 }

@@ -1,0 +1,7 @@
+n,InsertsortMemoryUsage,QuicksortMemoryUsage,MeragesortMemoryUsage,HeapsortMemoryUsage 
+500,4,192,2000,12,
+1000,4,256,4000,12,
+2000,4,288,8000,12,
+3000,4,320,12000,12,
+4000,4,288,16000,12,
+5000,4,288,20000,12,

@@ -6,22 +6,25 @@ using namespace std;
 
 
 template<class T>
-void maxheapify(vector<T>& a, const int& root, const int& len){
-    int left = 2*root+1;
-    int right = 2*root+2;
+void maxheapify(vector<T>& a, const int& root, const int& left, const int& right){
+    int l = 2 * root + 1; // left child
+    int r = 2 * root + 2; // right child
     int largest = root;
 
-    if(left < len && a[left] >= a[largest]){
-        largest = left;
-    }
-    
-    if(right < len && a[right] >= a[largest]){
-        largest = right;
+    // 如果左子樹存在且大於根節點
+    if (l <= right && l >= left && a[l] > a[largest]) {
+        largest = l;
     }
 
-    if(largest != root){
+    // 如果右子樹存在且大於根節點
+    if (r <= right && r >= left && a[r] > a[largest]) {
+        largest = r;
+    }
+
+    // 如果最大值不是根節點，則交換並遞迴調整
+    if (largest != root) {
         swap(a[root], a[largest]);
-        maxheapify(a, largest, len);
+        maxheapify(a, largest, left, right);
     }
 }
 
@@ -29,19 +32,20 @@ void maxheapify(vector<T>& a, const int& root, const int& len){
 template<class T>
 void maxheap(vector<T>& a, const int& left, const int& right){
     int size = right - left + 1;
-    for(int i = size; i >= left; i--){
-        maxheapify(a, i, size);
+    for (int i = (right - 1) / 2; i >= left; i--) {
+        maxheapify(a, i, left, right);
     }
 }
 
 template<class T>
 vector<T> heapsort(vector<T> a, const int& left, const int& right){
     int size = right - left + 1;
-    maxheap(a, left, right);
-    for(int i = right; i > left; i--){
-        swap(a[i], a[left]);
-        // 減掉以排序的長度在找下個最大堆積
-        maxheapify(a, left, --size);
+    maxheap(a, left, right); // 建立最大堆積
+    for (int i = right; i > left; i--) {
+        // 將當前最大元素交換到右邊
+        swap(a[left], a[i]);
+        // 再次調整堆積
+        maxheapify(a, left, left, i - 1);
     }
     return a;
 }
@@ -67,7 +71,7 @@ void compositesort(vector<T>& a, const int& left, const int& right, int& depth) 
 
     if (left >= right) return;
 
-    // 小數據使用insertSort
+    // // 小數據使用insertSort
     if (size <= 30) {
         a = insertsort(a, left, right);
         return;
@@ -112,7 +116,7 @@ bool checksort(vector<T>& a, int n){
 
 int main(){
     ifstream in;
-    int n, depth;
+    int n, depth = 100;
     in.open("data.txt");
     in >> n;
     vector<int> test(n);
