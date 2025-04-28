@@ -20,6 +20,18 @@
 
 
 ## 程式實作
+所使用到的所有函式庫
+```cpp
+#include <iostream>
+#include <cmath>
+#include <fstream>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+#include <string>
+#include <algorithm>
+```
+
 讀取文字檔案
 
 ```cpp
