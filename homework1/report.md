@@ -5,13 +5,144 @@
 
 ## 解題說明
 
-本題要求測試4種排序方法，他們的效率時間範圍，並因此做出複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
+本題要求測試4種排序方法，在最壞資料情況下獲取他們的效率時間範圍，並出複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
 
 ### 解題策略
+1.實作四種排序法：Insertion Sort、Quick Sort（使用 median-of-three）、Merge Sort（使用非遞迴法）、Heap Sort。
 
+2.用4種排序法測試他們各自最壞情況下的時間複雜度（n = 30,500, 1000, ..., 5000,10000）。
+
+3.測試平均情況下的時間複雜度（使用亂數產生資料）。
+
+4.比較結果並畫圖。
+
+5.寫出綜合排序函式（Composite Sort Function），並再做比較
 
 
 ## 程式實作
+讀取文字檔案
+
+```cpp
+vector<int> read_data(const string& filename, int& n) {
+    ifstream in;
+    in.open(filename);
+    if (!in.is_open()) {
+        throw runtime_error("Cannot open file: " + filename);
+    }
+
+    // 讀入資料筆數
+    in >> n;
+    vector<int> a(n);
+
+    // 讀入資料
+    for (int i = 0; i < n; i++) {
+        if (!(in >> a[i])) {
+            in.close();
+            throw runtime_error("Invalid data format in file: " + filename);
+        }
+    }
+
+    in.close();
+    return a;
+}
+```
+寫入文字檔案
+
+```cpp
+void write_to_file(const vector<int>& data, const string& filename) {
+    ofstream out(filename);
+    out << data.size() << endl;
+    for (int i = 0; i < data.size(); i++) {
+        out << data[i];
+        if (i < data.size() - 1) out << " ";
+    }
+    out << endl;
+    out.close();
+}
+```
+
+
+生成insertion最糟糕的資料
+
+```cpp
+void generate_insertion_worst(int n) {
+    vector<int> data(n);
+    for (int i = 0; i < n; i++) {
+        data[i] = n - i;
+    }
+    write_to_file(data, "data.txt");
+}
+}
+```
+
+merge和heap的前置生成函數
+
+
+```cpp
+void permute(vector<int>& arr, int n) {
+    for (int i = n - 1; i >= 1; --i) {
+        int j = rand() % (i + 1); // Random index from 0 to i
+        swap(arr[i], arr[j]);
+    }
+}
+```
+生成merge最糟糕資料
+
+```cpp
+void generate_merge_worst(int n) {
+    srand(time(0));
+    vector<int> arr(n);
+
+    // Initialize array with 1 to n
+    for (int i = 0; i < n; ++i) {
+        arr[i] = i + 1;
+    }
+
+    // Generate one random permutation
+    permute(arr, n);
+    write_to_file(arr, "data.txt");
+}
+```
+生成heap最糟資料
+
+```cpp
+void generate_heap_worst(int n) {
+    srand(time(0));
+    vector<int> arr(n);
+
+    // Initialize array with 1 to n
+    for (int i = 0; i < n; ++i) {
+        arr[i] = i + 1;
+    }
+
+    // Generate one random permutation
+    permute(arr, n);
+    write_to_file(arr, "data.txt");
+}
+```
+
+生成隨機資料
+
+```cpp
+void generate_random_data(int n) {
+    ofstream out("data.txt");
+    if (!out.is_open()) {
+        cerr << "無法開啟檔案: " << "data.txt" << endl;
+        return;
+    }
+
+    srand(time(NULL)); // 設定隨機種子
+
+    out << n << endl; // 寫入資料筆數
+    for (int i = 0; i < n; i++) {
+        out << rand() % n << " ";
+    }
+    out << endl;
+
+    out.close();
+}
+```
+
 
 Insertion Sort
 
@@ -156,15 +287,41 @@ void heapsort(vector<T>& a){
 
 ## 效能分析
 
-## 測試與驗證
-
 ### 不同排序的空間複雜度
 | 排序演算法 | 空間複雜度| 
 |----------|--------------|
 | Insertion Sort   | O($1$) |
-| Merge Sort   | O($n log n$)|
-| Heap Sort   | O($n log n$) |
-| Quick Sort   | O($n log n$)
+| Merge Sort   | O($n$)|
+| Heap Sort   | O($1$) |
+| Quick Sort   | O($log n$)
+
+測試方式:
+更新最大記憶體函式
+```c++
+void update_max_memory(size_t memory) {
+    if (memory > max_memory_usage) {
+        max_memory_usage = memory;
+    }
+}
+```
+對每個排序使用不同的測量方式
+Insertion sort 只有新增一個暫存變數
+```c++
+update_max_memory(sizeof(temp));
+```
+Quick sort 看遞迴深度，每次有i,j,mid,piovt存
+```c++
+update_max_memory(depth * 4 * sizeof(int));
+```
+Merge sort 額外空間儲存左右陣列
+```c++
+size_t current_memory = memory_of_vector(left) + memory_of_vector(right);
+update_max_memory(current_memory);
+```
+Heap sort 只有left、right、largest
+```c++
+update_max_memory(3 * sizeof(int)); 
+```
 
 ### 不同排序的時間複雜度
 | 排序演算法 | Best| Worst| Avg| 
@@ -197,15 +354,11 @@ stop = clock();
 | 測試七   | $n = 5000$     |  0.0600909|0.0208545 |  0.006    |0.003     |
 | 測試八   | $n = 10000$     |  0.238436|0.0834545 |  0.012    |0.004     |
 
-### 不同排序平均運行時間
-| 測試案例 | 輸入參數 $n$ | Insertion Sort(20次平均) | Merge Sort(20次平均) |Heap Sort(20次平均) | Quick Sort(20次平均) |
-|----------|--------------|----------|----------|----------|----------|
-| 測試一   | $n = 500$      | 0.0004        | 0.0002       |0.001        |0.0001  |
-| 測試二   | $n = 1000$      | 0.001        | 0.001      |0.001        |0.0024 |
-| 測試三   | $n = 2000$      | 0.0048        | 0.0022        |0.003       |0.0096       |
-| 測試四   | $n = 3000$      | 0.01       | 0.0026     |0.004        |0.021    |
-| 測試五   | $n = 4000$     | 0.0166 |0.003  | 0.009  |   0.0344    |
-| 測試六   | $n = 5000$     |  0.0274|0.0038 |  0.011    |0.0566     |
+
+
+![糟糕狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366049723403735100/QtXVX4G8N9wAAAABJRU5ErkJggg.png?ex=680f8872&is=680e36f2&hm=c537541d964d58b2a77f98ea6fe97b23d203445aa6a92c8de89b9746891e0cf8&)
+根據以上測出來的資料可以看出Insertion Sort符合最壞情況(O($n^2$) Quick Sort符合最壞情況(O($n^2$) Merge Sort符合最壞情況O($n log n$)  Heap Sort符合最壞情況O($n log n$)，這4個排序法都複合他們最壞情況的時間複雜度
+
 
 ### 不同排序運行效率最佳範圍
 | 排序演算法 | 最佳效率範圍| 理由 |
@@ -215,23 +368,37 @@ stop = clock();
 | Heap Sort   | $n <= 2000     | 記憶體占用小      | 
 | Quick Sort   | $n >= 500$      | 雖然最糟情況會到O(n^2)，但平均快       | 
 
-### 不同排序運行平均時間(50組平均)
+
+### 不同排序運行平均時間(20組平均)
 | 測試案例 | 輸入參數 $n$ | Insertion Sort | Quick Sort |Merge Sort | Heap Sort |Composite Sorting Function |
 |----------|--------------|----------|----------|----------|----------|----------|
-| 測試一   | $n = 30$      | 0        | 0        |0.0001      |0         |0.00006       |
-| 測試二   | $n = 500$     | 0.00055  | 0.0001   |0.0016      |0.00025   |0.00014        |
-| 測試三   | $n = 1000$    | 0.00215  | 0.00015  |0.0034      |0.0002    |0.0003       |
-| 測試四   | $n = 2000$    | 0.00845  | 0.0002   |0.00675     |0.00075   |0.00044        |
-| 測試五   | $n = 3000$    | 0.01945  | 0.0004   |0.01035     |0.00115   |0.00062         |
-| 測試六   | $n = 4000$    | 0.03395  | 0.0007   |0.01405     |0.00165   |0.00082        |
-| 測試七   | $n = 5000$    | 0.0525   | 0.00095  |0.01665     |0.0019    |0.00082        |
-| 測試八   | $n = 10000$   | 0.20885  | 0.00175  |0.03545     |0.0044    |0.00082        |
-| 測試九   | $n = 30000$   | 2.67215  | 0.0059   |0.10195     |0.01525   |0.00082        |
-| 測試十   | $n = 50000$   | 7.56815  | 0.0103   |0.1698      |0.02575   |0.00082        |
+| 測試一   | $n = 30$      | 0        | 0        |0      |0         |0.00005      |
+| 測試二   | $n = 500$     | 0.0001  | 0.00005   |0.00015      |0.0001   |0.00005       |
+| 測試三   | $n = 1000$    | 0.0007  | 0.00005  |0.00035      |0.0001    |0.000105263       |
+| 測試四   | $n = 2000$    | 0.00265  | 0.0001   |0.001     |0.0001   |0.000421053        |
+| 測試五   | $n = 3000$    | 0.0059  | 0.00015   |0.00125     |0.00065   |0.000578947         |
+| 測試六   | $n = 4000$    | 0.0095  | 0.0005   |0.00155     |0.0007   |0.000789474        |
+| 測試七   | $n = 5000$    | 0.01535   | 0.0006  |0.0023     |0.00095    |0.001        |
+| 測試八   | $n = 10000$   | 0.0605  | 0.001  |0.0045     |0.00185    |0.00210526        |
+| 測試九   | $n = 30000$   | 0.80815  | 0.0043   |0.0202     |0.00785   |0.00831579        |
+| 測試十   | $n = 50000$   | 2.40035  | 0.0079   |0.0384      |0.0149   |0.0152105        |
+
+
+
+![平均狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366050541196542062/8p7vDEEIIIUQJJLfyCSGEEEIIIYQQQgi3kFv5hBBCCCGEEEIIIYRbSGJKCCGEEEIIIYQQQriFJKaEEEIIIYQQQgghhFtIYkoIIYQQQgghhBBCuIUkpoQQQgghhBBCCCGEW0hiSgghhBBCCCGEEEK4hSSmhBBCCCGEEEIIIYRbSGJKCCGEEEIIIYQQQriFJKaEEEIIIYQQQgghhFv8fzZk5jdhjGS5AAAAAElFTkSuQmCC.png?ex=680f8935&is=680e37b5&hm=19752d0b7af82e697c23ca5a51c4be7dfcf39fd1ed6bd7e3917122853a419d71&)
+
+根據以上測出來的資料可以看出Insertion Sort符合平均情況(O($n^2$) Quick Sort符合平均情況O($n log n$) Merge Sort符合平均情況O($n log n$)  Heap Sort符合平均情況O($n log n$)，這4個排序法都符合他們平均情況下的時間複雜度
+
+
+## 測試與驗證
+
+
 
 
 
 ## 申論及開發報告
+在寫composite sort時，利用了quick sort當作預設的排序方式，因為速度最快。在遞迴深度過高或需排序長度較低時，採用了heap sort和insertion sort，速度相差不多的情況下又能減少記憶體空間占用。
+
 
 ### 結論
 
