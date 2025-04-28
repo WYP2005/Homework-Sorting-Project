@@ -295,6 +295,34 @@ void heapsort(vector<T>& a){
 | Heap Sort   | O($1$) |
 | Quick Sort   | O($log n$)
 
+測試方式:
+更新最大記憶體函式
+```c++
+void update_max_memory(size_t memory) {
+    if (memory > max_memory_usage) {
+        max_memory_usage = memory;
+    }
+}
+```
+對每個排序使用不同的測量方式
+Insertion sort 只有新增一個暫存變數
+```c++
+update_max_memory(sizeof(temp));
+```
+Quick sort 看遞迴深度，每次有i,j,mid,piovt存
+```c++
+update_max_memory(depth * 4 * sizeof(int));
+```
+Merge sort 額外空間儲存左右陣列
+```c++
+size_t current_memory = memory_of_vector(left) + memory_of_vector(right);
+update_max_memory(current_memory);
+```
+Heap sort 只有left、right、largest
+```c++
+update_max_memory(3 * sizeof(int)); 
+```
+
 ### 不同排序的時間複雜度
 | 排序演算法 | Best| Worst| Avg| 
 |----------|--------------|--------------|--------------|
