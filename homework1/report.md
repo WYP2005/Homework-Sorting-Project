@@ -445,7 +445,7 @@ stop = clock();
 
 
 
-![平均狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366050541196542062/8p7vDEEIIIUQJJLfyCSGEEEIIIYQQQgi3kFv5hBBCCCGEEEIIIYRbSGJKCCGEEEIIIYQQQriFJKaEEEIIIYQQQgghhFtIYkoIIYQQQgghhBBCuIUkpoQQQgghhBBCCCGEW0hiSgghhBBCCCGEEEK4hSSmhBBCCCGEEEIIIYRbSGJKCCGEEEIIIYQQQriFJKaEEEIIIYQQQgghhFv8fzZk5jdhjGS5AAAAAElFTkSuQmCC.png?ex=680f8935&is=680e37b5&hm=19752d0b7af82e697c23ca5a51c4be7dfcf39fd1ed6bd7e3917122853a419d71&)
+![平均狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366437304755028028/B9Nmgo5UxVu2AAAAAElFTkSuQmCC.png?ex=6810f168&is=680f9fe8&hm=cd71d5d84ab7c336bcc0e20562284c8329c40274e2d00ca3a68ef9782621f8db&)
 
 根據以上測出來的資料可以看出Insertion Sort符合平均情況(O($n^2$) Quick Sort符合平均情況O($n log n$) Merge Sort符合平均情況O($n log n$)  Heap Sort符合平均情況O($n log n$)，這4個排序法都符合他們平均情況下的時間複雜度
 
