@@ -343,9 +343,9 @@ void compositesort(vector<T>& a, const int& left, const int& right, int depth) {
 }
 
 int main() {
-
     // 最糟狀況
     int data = 30000;
+    std::cin>>data;
     int n;
     vector<int> result;
     double start, stop;
