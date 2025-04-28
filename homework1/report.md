@@ -5,18 +5,18 @@
 
 ## 解題說明
 
-本題要求測試4種排序方法，在最壞資料情況下獲取他們的效率時間範圍，並出複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
+本題要求測試4種排序方法，在最壞資料情況下測試獲取他們的效率時間範圍，並出複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
 
 ### 解題策略
-1.實作四種排序法：Insertion Sort、Quick Sort（使用 median-of-three）、Merge Sort（使用非遞迴法）、Heap Sort。
+1.實作四種排序：Insertion Sort、Quick Sort、Merge Sort、Heap Sort。
 
-2.用4種排序法測試他們各自最壞情況下的時間複雜度（n = 30,500, 1000, ..., 5000,10000）。
+2.測試4種排序他們各自最壞情況下的時間複雜度（n = 30,500, 1000, ..., 5000,10000）。
 
 3.測試平均情況下的時間複雜度（使用亂數產生資料）。
 
 4.比較結果並畫圖。
 
-5.寫出綜合排序函式（Composite Sort Function），並再做比較
+5.寫出綜合排序函式（Composite Sort Function），再去比較另外4個排序
 
 
 ## 程式實作
