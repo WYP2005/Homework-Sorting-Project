@@ -470,7 +470,7 @@ stop = clock();
 
 
 ### 結論
-
+這次的作業當中我們實作了Insertion sort、Quick sort、Merge sort、Heap sort，並分析和比較了他們之間的執行速度和耗費空間，最後嘗試將前面的排序方式組合起來完成整合排序。
 
 
 
