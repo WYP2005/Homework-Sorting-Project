@@ -181,17 +181,15 @@ Quick Sort
 template<class T>
 void quicksort(vector<T>& a, int left, int right){
     if(left < right){
-        int mid = a[(left+right)/2], pivot;
 
         // 取三個數的中間值
-        pivot = left;
-        if((a[left] >= mid && mid >= a[right]) || (a[left] <= mid && mid <= a[right]))
-            pivot = (left+right) / 2;
-        if((a[right] >= a[left] && a[right] <= mid) || (a[right] <= a[left] && a[right] >= mid))
-            pivot = right;
-
+        int mid = (left + right) / 2;
+        if (a[mid] < a[left]) swap(a[left], a[mid]);
+        if (a[right] < a[left]) swap(a[left], a[right]);
+        if (a[mid] < a[right]) swap(a[mid], a[right]);
         // 將pivot移到最左邊
-        swap(a[left], a[pivot]);
+        swap(a[left], a[right]);
+
         int i = left, j = right + 1;
         do{
             do i++; while(a[i] < a[left]);
@@ -294,6 +292,49 @@ void heapsort(vector<T>& a){
         // 減掉以排序的長度在找下個最大堆積
         maxheapify(a, 0, --len);
     }
+}
+```
+
+Composite sort
+```c++
+template<class T>
+void compositesort(vector<T>& a, const int& left, const int& right, int depth) {
+    int size = right - left + 1;
+
+    if (left >= right) return;
+
+    // 資料筆數低時使用InsertSort
+    if (size <= 30) {
+        a = insertsort(a, left, right);
+        return;
+    }
+
+    // 遞迴深度高時HeapSort
+    if (depth >= log2(a.size())) {
+        a = heapsort(a, left, right);
+        return;
+    }
+
+    // 預設使用Quicksort
+    
+    // 取三個數的中間值
+    int mid = (left + right) / 2;
+    if (a[mid] < a[left]) swap(a[left], a[mid]);
+    if (a[right] < a[left]) swap(a[left], a[right]);
+    if (a[mid] < a[right]) swap(a[mid], a[right]);
+    swap(a[left], a[right]);
+
+    int i = left, j = right + 1;
+    do {
+        do i++; while (a[i] < a[left]);
+        do j--; while (a[j] > a[left]);
+        if (i < j) swap(a[i], a[j]);
+    } while (i < j);
+
+    swap(a[left], a[j]);
+
+    compositesort(a, left, j - 1, depth+1);
+    compositesort(a, j + 1, right, depth+1);
 }
 ```
 
