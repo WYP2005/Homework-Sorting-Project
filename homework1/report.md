@@ -469,8 +469,5 @@ stop = clock();
 在寫composite sort時，利用了quick sort當作預設的排序方式，因為速度最快。在遞迴深度過高或需排序長度較低時，採用了heap sort和insertion sort，速度相差不多的情況下又能減少記憶體空間占用。
 
 
-### 結論
-這次的作業當中我們實作了Insertion sort、Quick sort、Merge sort、Heap sort，並分析和比較了他們之間的執行速度和耗費空間，最後嘗試將前面的排序方式組合起來完成整合排序。
-
 
 
