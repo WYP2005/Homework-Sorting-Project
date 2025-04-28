@@ -307,6 +307,30 @@ void heapsort(vector<T>& a){
 | Heap Sort   | O($1$) |
 | Quick Sort   | O($log n$)
 
+
+
+### 不同排序的時間複雜度
+| 排序演算法 | Best| Worst| Avg| 
+|----------|--------------|--------------|--------------|
+| Insertion Sort   | O($n$)  | O($n^2$) | O($n^2$) |
+| Merge Sort   | O($n log n$)  | O($n log n$) | O($n log n$) |
+| Heap Sort   | O($n log n$)   | O($n log n$) | O($n log n$) |
+| Quick Sort   | O($n log n$)  | O($n^2$) | O($n log n$)
+
+
+
+
+### 不同排序運行效率最佳範圍
+| 排序演算法 | 最佳效率範圍| 理由 |
+|----------|--------------|----------|
+| Insertion Sort   | $n <= 30$      | 小數據處理快速、記憶體占用小        | 
+| Merge Sort   | $n >= 500$     | 各種情況時間複雜度都為O(nlogn)        | 
+| Heap Sort   | $n >= 500$       | 記憶體占用小      | 
+| Quick Sort   | $n >= 500$      | 平均最快       | 
+
+
+## 測試與驗證
+
 測試方式:
 更新最大記憶體函式
 ```c++
@@ -334,15 +358,6 @@ Heap sort 只有left、right、largest
 ```c++
 update_max_memory(3 * sizeof(int)); 
 ```
-
-### 不同排序的時間複雜度
-| 排序演算法 | Best| Worst| Avg| 
-|----------|--------------|--------------|--------------|
-| Insertion Sort   | O($n$)  | O($n^2$) | O($n^2$) |
-| Merge Sort   | O($n log n$)  | O($n log n$) | O($n log n$) |
-| Heap Sort   | O($n log n$)   | O($n log n$) | O($n log n$) |
-| Quick Sort   | O($n log n$)  | O($n^2$) | O($n log n$)
-
 ### 計時方式
 使用在<ctime>中的clock()，單位為毫秒
 用法如以下程式
@@ -371,14 +386,6 @@ stop = clock();
 ![糟糕狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366049723403735100/QtXVX4G8N9wAAAABJRU5ErkJggg.png?ex=680f8872&is=680e36f2&hm=c537541d964d58b2a77f98ea6fe97b23d203445aa6a92c8de89b9746891e0cf8&)
 根據以上測出來的資料可以看出Insertion Sort符合最壞情況(O($n^2$) Quick Sort符合最壞情況(O($n^2$) Merge Sort符合最壞情況O($n log n$)  Heap Sort符合最壞情況O($n log n$)，這4個排序法都符合他們最壞情況的時間複雜度
 
-
-### 不同排序運行效率最佳範圍
-| 排序演算法 | 最佳效率範圍| 理由 |
-|----------|--------------|----------|
-| Insertion Sort   | $n <= 30$      | 小數據處理快速、記憶體占用小        | 
-| Merge Sort   | $n >= 500$     | 各種情況時間複雜度都為O(nlogn)        | 
-| Heap Sort   | $n >= 500$       | 記憶體占用小      | 
-| Quick Sort   | $n >= 500$      | 平均最快       | 
 
 
 ### 不同排序運行平均時間(20組平均)
@@ -414,11 +421,6 @@ stop = clock();
 ![平均狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366050541196542062/8p7vDEEIIIUQJJLfyCSGEEEIIIYQQQgi3kFv5hBBCCCGEEEIIIYRbSGJKCCGEEEIIIYQQQriFJKaEEEIIIYQQQgghhFtIYkoIIYQQQgghhBBCuIUkpoQQQgghhBBCCCGEW0hiSgghhBBCCCGEEEK4hSSmhBBCCCGEEEIIIYRbSGJKCCGEEEIIIYQQQriFJKaEEEIIIYQQQgghhFv8fzZk5jdhjGS5AAAAAElFTkSuQmCC.png?ex=680f8935&is=680e37b5&hm=19752d0b7af82e697c23ca5a51c4be7dfcf39fd1ed6bd7e3917122853a419d71&)
 
 根據以上測出來的資料可以看出Insertion Sort符合平均情況(O($n^2$) Quick Sort符合平均情況O($n log n$) Merge Sort符合平均情況O($n log n$)  Heap Sort符合平均情況O($n log n$)，這4個排序法都符合他們平均情況下的時間複雜度
-
-
-## 測試與驗證
-
-
 
 
 
