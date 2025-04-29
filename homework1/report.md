@@ -234,7 +234,7 @@ void merge(vector<T>& a, const int& front, const int& mid, const int& end){
 }
 
 template<class T>
-void mergesort(vector<T> a, const int& front, const int& end){
+void mergesort(const vector<T>& a, const int& front, const int& end){
     // 只剩一個元素時，回傳單一元素的vector
     if (front >= end) {
         vector<T> single = { a[front] };
