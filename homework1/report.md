@@ -5,7 +5,7 @@
 
 ## 解題說明
 
-本題要求測試4種排序方法，在最壞資料情況下測試獲取他們的效率時間範圍，並出複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
+本題要求測試4種排序方法，在最壞資料情況下測試獲取他們的效率時間範圍，並寫出複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
 
 ### 解題策略
 1.實作四種排序：Insertion Sort、Quick Sort、Merge Sort、Heap Sort。
