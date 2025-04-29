@@ -74,7 +74,7 @@ void write_to_file(const vector<int>& data, const string& filename) {
 ```
 
 
-生成insertion最糟糕的資料
+生成insertion sort最糟糕的資料
 
 ```cpp
 void generate_insertion_worst(int n) {
@@ -87,7 +87,7 @@ void generate_insertion_worst(int n) {
 }
 ```
 
-merge和heap的前置生成函數
+merge sort和heap sort的前置生成函數
 
 
 ```cpp
@@ -162,7 +162,18 @@ Quick Sort
 
 ```cpp
 template<class T>
-void quicksort(vector<T>& a, int left, int right){
+vector<T> quicksort(vector<T> a, const int& front, const int& end, const bool& worst) {
+    if (worst)
+        quicksortWorst(a, front, end);
+    else
+        quicksortNormal(a, front, end);
+    return a;
+}
+```
+
+```cpp
+template<class T>
+void quicksortNormal(vector<T>& a, int left, int right){
     if(left < right){
 
         // 取三個數的中間值
@@ -223,15 +234,17 @@ void merge(vector<T>& a, const int& front, const int& mid, const int& end){
 }
 
 template<class T>
-void mergesort(vector<T>& a, const int& front, const int& end){
-
-    if(front < end){
-        int mid;
-        mid = (front+end) / 2;
-        mergesort(a, front, mid);
-        mergesort(a, mid+1, end);
-        merge(a, front, mid, end);
+void mergesort(vector<T> a, const int& front, const int& end){
+    // 只剩一個元素時，回傳單一元素的vector
+    if (front >= end) {
+        vector<T> single = { a[front] };
+        return single;
     }
+
+    int mid = (front + end) / 2;
+    vector<T> left = mergesort(a, front, mid);
+    vector<T> right = mergesort(a, mid + 1, end);
+    return merge(front, end);
 }
 ```
 
@@ -267,7 +280,7 @@ void maxheap(vector<T>& a){
 }
 
 template<class T>
-void heapsort(vector<T>& a){
+void heapsort(vector<T> a){
     int len = a.size();
     maxheap(a);
     for(int i = a.size()-1; i > 0; i--){
@@ -275,6 +288,7 @@ void heapsort(vector<T>& a){
         // 減掉以排序的長度在找下個最大堆積
         maxheapify(a, 0, --len);
     }
+    return a;
 }
 ```
 
