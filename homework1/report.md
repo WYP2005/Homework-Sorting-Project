@@ -424,7 +424,6 @@ stop = clock();
 ![糟糕狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366049723403735100/QtXVX4G8N9wAAAABJRU5ErkJggg.png?ex=680f8872&is=680e36f2&hm=c537541d964d58b2a77f98ea6fe97b23d203445aa6a92c8de89b9746891e0cf8&)
 根據以上測出來的資料可以看出Insertion Sort符合最壞情況(O($n^2$) Quick Sort符合最壞情況(O($n^2$) Merge Sort符合最壞情況O($n log n$)  Heap Sort符合最壞情況O($n log n$)，這4個排序法都符合他們最壞情況的時間複雜度
 
-![image](https://github.com/user-attachments/assets/8e1bda6c-eb51-485f-8732-f9fc28dde12b)
 
 
 ### 不同排序運行平均時間(500組平均)
@@ -446,6 +445,8 @@ stop = clock();
 ![平均狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366437304755028028/B9Nmgo5UxVu2AAAAAElFTkSuQmCC.png?ex=68119a28&is=681048a8&hm=43816d88c0c0ee07828e5f22d17a7d135af9558e00173adbbcfe5cf42fbf05fa&)
 
 根據以上測出來的資料可以看出Insertion Sort符合平均情況(O($n^2$) Quick Sort符合平均情況O($n log n$) Merge Sort符合平均情況O($n log n$)  Heap Sort符合平均情況O($n log n$)，這4個排序法都符合他們平均情況下的時間複雜度
+
+![平均空間折線圖](https://github.com/user-attachments/assets/8e1bda6c-eb51-485f-8732-f9fc28dde12b)
 
 
 
