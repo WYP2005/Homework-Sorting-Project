@@ -98,27 +98,10 @@ void permute(vector<int>& arr, int n) {
     }
 }
 ```
-生成merge最糟糕資料
+生成merge sort和heap sort最糟糕資料
 
 ```cpp
 void generate_merge_worst(int n) {
-    srand(time(0));
-    vector<int> arr(n);
-
-    // Initialize array with 1 to n
-    for (int i = 0; i < n; ++i) {
-        arr[i] = i + 1;
-    }
-
-    // Generate one random permutation
-    permute(arr, n);
-    write_to_file(arr, "data.txt");
-}
-```
-生成heap最糟資料
-
-```cpp
-void generate_heap_worst(int n) {
     srand(time(0));
     vector<int> arr(n);
 
