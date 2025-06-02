@@ -421,7 +421,7 @@ stop = clock();
 
 
 
-![糟糕狀況折線圖]([[[https://cdn.discordapp.com/attachments/930060410823016509/1366049723403735100/QtXVX4G8N9wAAAABJRU5ErkJggg.png?ex=680f8872&is=680e36f2&hm=c537541d964d58b2a77f98ea6fe97b23d203445aa6a92c8de89b9746891e0cf8&](https://photos.google.com/photo/AF1QipNpKkKT1-vLmO3cvLAyIb7tSVSiq7tIQZCFi7TN)](https://photos.fife.usercontent.google.com/pw/AP1GczO6gQ1UO84DQjIMHDrMuNQNKsPwLGhrah8HkELwwrjvsnzmwjdfRSsj=w1189-h690-s-no-gm?authuser=0)](https://lh3.googleusercontent.com/pw/AP1GczNNcnygtyU12iccXY59T2I0OFKuqW_NSJqZH0Z86X9ePRI1czOLHlMPWmVePXMVxk9ghy4TzhKvxMyO8qP7P9bJtOc1cYi2oZW6V2ZZc5-dwHL9S7AVOKI3qI16BYmImwopgZ-sETaDNI9pZ37eBJ3L=w1189-h690-s-no-gm?authuser=0))
+![糟糕狀況折線圖](https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9e6817f3-6f54-4a68-aec3-44100d3f0e90/djvkvhj-8a16824e-4259-462a-befd-9b4c0ffafcbf.png/v1/fill/w_1174,h_681,q_70,strp/qtxvx4g8n9waaaabjru5erkjggg_by_hotdogewtwet_djvkvhj-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjkwIiwicGF0aCI6IlwvZlwvOWU2ODE3ZjMtNmY1NC00YTY4LWFlYzMtNDQxMDBkM2YwZTkwXC9kanZrdmhqLThhMTY4MjRlLTQyNTktNDYyYS1iZWZkLTliNGMwZmZhZmNiZi5wbmciLCJ3aWR0aCI6Ijw9MTE4OSJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.RzDZSK27c-mNOY0FGCXH2WIfaSBpIT0Y4waPpaIQ5bQ)
 根據以上測出來的資料可以看出Insertion Sort符合最壞情況(O($n^2$) Quick Sort符合最壞情況(O($n^2$) Merge Sort符合最壞情況O($n log n$)  Heap Sort符合最壞情況O($n log n$)，這4個排序法都符合他們最壞情況的時間複雜度
 
 
@@ -442,7 +442,7 @@ stop = clock();
 
 
 
-![平均狀況折線圖]([[[https://cdn.discordapp.com/attachments/930060410823016509/1366437304755028028/B9Nmgo5UxVu2AAAAAElFTkSuQmCC.png?ex=68119a28&is=681048a8&hm=43816d88c0c0ee07828e5f22d17a7d135af9558e00173adbbcfe5cf42fbf05fa&](https://photos.fife.usercontent.google.com/pw/AP1GczMiTH9BLqAZ2XU1QTLMc63rvFKg-S-v2_JROQHIXYUx5ErzCj3bEtW-=w990-h590-s-no-gm?authuser=0)](https://photos.fife.usercontent.google.com/pw/AP1GczMiTH9BLqAZ2XU1QTLMc63rvFKg-S-v2_JROQHIXYUx5ErzCj3bEtW-=w990-h590-s-no-gm?authuser=0)](https://photos.app.goo.gl/UMttojinU6zLfvC88))
+![平均狀況折線圖](https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9e6817f3-6f54-4a68-aec3-44100d3f0e90/djvkvh9-8389e557-378b-4863-8244-37d89dbc1bdc.png/v1/fill/w_990,h_590,q_80,strp/d5be08wnqs3aaaaaaelftksuqmcc_by_hotdogewtwet_djvkvh9-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTkwIiwicGF0aCI6IlwvZlwvOWU2ODE3ZjMtNmY1NC00YTY4LWFlYzMtNDQxMDBkM2YwZTkwXC9kanZrdmg5LTgzODllNTU3LTM3OGItNDg2My04MjQ0LTM3ZDg5ZGJjMWJkYy5wbmciLCJ3aWR0aCI6Ijw9OTkwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.CoLcvvmrMDNE9fmIzTjLotQ-54bMzkurptsr1O5QCz8)
 
 根據以上測出來的資料可以看出Insertion Sort符合平均情況(O($n^2$) Quick Sort符合平均情況O($n log n$) Merge Sort符合平均情況O($n log n$)  Heap Sort符合平均情況O($n log n$)，這4個排序法都符合他們平均情況下的時間複雜度
 
