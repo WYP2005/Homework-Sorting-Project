@@ -6,18 +6,22 @@
 using namespace std;
 
 // 前向聲明 TreeNode
-template <class K, class E> class TreeNode;
+template <class K, class E>
+class TreeNode;
 
-template <class K, class E> 
+// Dictionary 抽象基類
+template <class K, class E>
 class Dictionary {
 public:
     virtual bool IsEmpty() const = 0;
     virtual pair<K, E>* Get(const K&) const = 0;
-    virtual void Insert(const pair<K, E>&) = 0; 
+    virtual void Insert(const pair<K, E>&) = 0;
     virtual void Delete(const K&) = 0;
+    // 正確宣告 findMin 為純虛擬函數
     virtual TreeNode<K, E>* findMin(TreeNode<K, E>*) = 0;
 };
 
+// TreeNode 模板類
 template <class K, class E>
 class TreeNode {
 public:
@@ -32,6 +36,7 @@ public:
     }
 };
 
+// BST 類，繼承自 Dictionary
 template <class K, class E>
 class BST : public Dictionary<K, E> {
 private:
@@ -44,10 +49,12 @@ public:
     pair<K, E>* Get(const K&) const override;
     void Insert(const pair<K, E>&) override;
     void Delete(const K&) override;
+    // 確保 findMin 簽名與基類一致
     TreeNode<K, E>* findMin(TreeNode<K, E>*) override;
     int getHeight() const;
 };
 
+// 實作 BST 的成員函數
 template <class K, class E>
 int BST<K, E>::height(TreeNode<K, E>* node) const {
     if (!node) return 0;
@@ -93,7 +100,8 @@ void BST<K, E>::Insert(const pair<K, E>& thePair) {
             pp->leftChild = p;
         else
             pp->rightChild = p;
-    } else
+    }
+    else
         root = p;
 }
 
@@ -119,7 +127,8 @@ void BST<K, E>::Delete(const K& k) {
         TreeNode<K, E>* successor = findMin(p->rightChild);
         p->data = successor->data;
         Delete(successor->data.first);
-    } else {
+    }
+    else {
         TreeNode<K, E>* nodeToDelete = p;
         if (pp) {
             if (p->leftChild)
@@ -130,7 +139,8 @@ void BST<K, E>::Delete(const K& k) {
                 pp->leftChild = p;
             else
                 pp->rightChild = p;
-        } else {
+        }
+        else {
             root = p->leftChild ? p->leftChild : p->rightChild;
         }
         delete nodeToDelete;
@@ -142,23 +152,11 @@ int BST<K, E>::getHeight() const {
     return height(root);
 }
 
+// 主程式測試
 int main() {
-    int n_values[] = {100, 500, 1000, 2000, 3000, 10000};
-    random_device rd;
-    mt19937 gen(rd());
-
-    cout << "n,Ratio\n"; // CSV 格式輸出，供繪圖
-    for (size_t i = 0; i < 6; i++) {
-        int n = n_values[i];
-        BST<int, int> bst;
-        for (int j = 0; j < n; j++) {
-            int key = gen() % 1000000 + 1; // 隨機鍵值 [1, 1000000]
-            pair<int, int> p(key, 0);
-            bst.Insert(p);
-        }
-        int h = bst.getHeight();
-        double ratio = (double)h / log2(n);
-        cout << n << "," << ratio << endl;
-    }
+    BST<int, int> bst; // 現在應該可以正確實例化
+    pair<int, int> p(1, 10);
+    bst.Insert(p);
+    cout << "Height: " << bst.getHeight() << endl;
     return 0;
 }
