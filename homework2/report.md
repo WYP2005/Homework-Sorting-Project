@@ -305,19 +305,10 @@ stop = clock();
 
 
 
-根據以上測出來的資料可以看出Insertion Sort符合平均情況(O($n^2$) Quick Sort符合平均情況O($n log n$) Merge Sort符合平均情況O($n log n$)  Heap Sort符合平均情況O($n log n$)，這4個排序法都符合他們平均情況下的時間複雜度
-
-![平均空間折線圖](https://github.com/user-attachments/assets/8e1bda6c-eb51-485f-8732-f9fc28dde12b)
-
 
 
 ## 申論及開發報告
-測試所使用每個排序的最糟情況產生  
-插入排序:產生由n、n-1~0由大到小的資料  
-快速排序:沿用插入排序的最糟測資，並更改選擇pivot的邏輯，讓pivot每次都選到最大值  
-整合排序和堆積排序:利用 permute() 函式實作 Fisher-Yates 洗牌法，確保每一個排列機率相同，隨機產生20組測試資料，並從中選出所需時間最久的  
-  
-在寫composite sort時，利用了quick sort當作預設的排序方式，因為速度最快。在遞迴深度過高或需排序長度較低時，採用了heap sort和insertion sort，速度相差不多的情況下又能減少記憶體空間占用。
+
 
 
 
