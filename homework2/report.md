@@ -271,33 +271,8 @@ int main() {
 
 ## 測試與驗證
 
-測試方式:
-更新最大記憶體函式
-```c++
-void update_max_memory(size_t memory) {
-    if (memory > max_memory_usage) {
-        max_memory_usage = memory;
-    }
-}
-```
-對每個排序使用不同的測量方式
-Insertion sort 只有新增一個暫存變數
-```c++
-update_max_memory(sizeof(temp));
-```
-Quick sort 看遞迴深度，每次有i,j,mid,piovt存
-```c++
-update_max_memory(depth * 4 * sizeof(int));
-```
-Merge sort 額外空間儲存左右陣列
-```c++
-size_t current_memory = memory_of_vector(left) + memory_of_vector(right);
-update_max_memory(current_memory);
-```
-Heap sort 只有left、right、largest
-```c++
-update_max_memory(3 * sizeof(int)); 
-```
+
+
 ### 計時方式
 使用在<ctime>中的clock()，單位為毫秒
 用法如以下程式
@@ -312,17 +287,13 @@ stop = clock();
 ### 各數值的比值表(10次取平均)
 | 測試案例 | 輸入參數 $n$ | 高度 | 高度除以log2n比值| 
 |----------|--------------|----------|----------|
-| 測試一   | $n = 100$      | 0       | 0       |
-| 測試二   | $n = 500$      | 0.000618182        | 0.0000909     |
-| 測試三   | $n = 1000$      | 0.00238182       | 0.000218182       |
-| 測試四   | $n = 2000$      | 0.00958182      | 0.0034     |
-| 測試五   | $n = 3000$     | 0.0218182 |0.00754545 | 
-| 測試六   | $n = 10000$     |  0.0392182|0.0133818|  
-
-
-
-根據以上測出來的資料可以看出Insertion Sort符合最壞情況(O($n^2$) Quick Sort符合最壞情況(O($n^2$) Merge Sort符合最壞情況O($n log n$)  Heap Sort符合最壞情況O($n log n$)，這4個排序法都符合他們最壞情況的時間複雜度
-
+| 測試一   | $n = 100$      | 13.8      |2.0772|
+| 測試二   | $n = 500$      | 20.0	        | 2.2308     |
+| 測試三   | $n = 1000$      | 20.9       | 2.0072       |
+| 測試四   | $n = 2000$      |24.3	      | 2.1159     |
+| 測試五   | $n = 3000$     | 26.2 |2.2683 | 
+| 測試六   | $n = 10000$     |  31.6	|2.3781|  
+根據上述表格可以看出總體比值大概都是為2開頭上下
 
 
 ### 不同排序運行平均時間(500組平均)
