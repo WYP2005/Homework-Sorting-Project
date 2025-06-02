@@ -20,7 +20,7 @@
 
 
 ## 程式實作
-所使用到的所有函式庫
+所使用到的所有函式庫和namespace
 ```cpp
 #include <iostream>
 #include <random>
@@ -29,9 +29,8 @@
 #include <vector>
 using namespace std;
 ```
-
-讀取文字檔案
-
+BST的抽象母類別
+宣告所有BST會用到的抽象函數
 ```cpp
 template <class K, class E>
 class Dictionary {
@@ -43,8 +42,7 @@ public:
     virtual TreeNode<K, E>* findMin(TreeNode<K, E>*) = 0;
 };
 ```
-寫入文字檔案
-
+樹的節點類別
 ```cpp
 template <class K, class E>
 class TreeNode {
@@ -62,8 +60,7 @@ public:
 ```
 
 
-生成insertion sort最糟糕的資料
-
+針對抽象類別Dictionary的BST類別完整宣告
 ```cpp
 template <class K, class E>
 class BST : public Dictionary<K, E> {
@@ -84,8 +81,8 @@ public:
 };
 ```
 
-merge sort和heap sort的前置生成函數
 
+遞迴版本的取得節點高度
 
 ```cpp
 template <class K, class E>
@@ -94,8 +91,7 @@ int BST<K, E>::height(TreeNode<K, E>* node) const {
     return 1 + max(height(node->leftChild), height(node->rightChild));
 }
 ```
-生成merge sort和heap sort最糟糕資料
-
+檢查樹是不是空的
 ```cpp
 template <class K, class E>
 bool BST<K, E>::IsEmpty() const {
@@ -103,7 +99,7 @@ bool BST<K, E>::IsEmpty() const {
 }
 ```
 
-生成隨機資料
+查找某個key
 
 ```cpp
 template <class K, class E>
@@ -122,8 +118,7 @@ pair<K, E>* BST<K, E>::Get(const K& k) const {
 ```
 
 
-Insertion Sort
-
+BST插入key和value的實作功能函數
 ```cpp
 template <class K, class E>
 void BST<K, E>::Insert(const pair<K, E>& thePair) {
@@ -151,8 +146,7 @@ void BST<K, E>::Insert(const pair<K, E>& thePair) {
 }
 ```
 
-Quick Sort
-
+找尋中序後繼節點
 ```cpp
 template <class K, class E>
 TreeNode<K, E>* BST<K, E>::findMin(TreeNode<K, E>* node) {
@@ -160,7 +154,7 @@ TreeNode<K, E>* BST<K, E>::findMin(TreeNode<K, E>* node) {
     return findMin(node->leftChild);
 }
 ```
-
+BST的刪除實作功能函數
 ```cpp
 template <class K, class E>
 void BST<K, E>::Delete(const K& k) {
@@ -199,8 +193,7 @@ void BST<K, E>::Delete(const K& k) {
 }
 ```
 
-Merge Sort
-
+類別外部取得BST高度的函數
 ```cpp
 template <class K, class E>
 int BST<K, E>::getHeight() const {
@@ -208,8 +201,7 @@ int BST<K, E>::getHeight() const {
 }
 ```
 
-Heap Sort
-
+陣列洗牌打亂順序讓結果更接近2
 ```cpp
 void permute(vector<int>& arr, int n, mt19937& gen) {
     for (int i = n - 1; i >= 1; --i) {
@@ -218,8 +210,7 @@ void permute(vector<int>& arr, int n, mt19937& gen) {
     }
 }
 ```
-
-Composite sort
+主程式的實作
 ```c++
 int main() {
     random_device rd;
@@ -332,7 +323,6 @@ stop = clock();
 
 
 
-![糟糕狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366049723403735100/QtXVX4G8N9wAAAABJRU5ErkJggg.png?ex=680f8872&is=680e36f2&hm=c537541d964d58b2a77f98ea6fe97b23d203445aa6a92c8de89b9746891e0cf8&)
 根據以上測出來的資料可以看出Insertion Sort符合最壞情況(O($n^2$) Quick Sort符合最壞情況(O($n^2$) Merge Sort符合最壞情況O($n log n$)  Heap Sort符合最壞情況O($n log n$)，這4個排序法都符合他們最壞情況的時間複雜度
 
 
@@ -353,7 +343,6 @@ stop = clock();
 
 
 
-![平均狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366437304755028028/B9Nmgo5UxVu2AAAAAElFTkSuQmCC.png?ex=68119a28&is=681048a8&hm=43816d88c0c0ee07828e5f22d17a7d135af9558e00173adbbcfe5cf42fbf05fa&)
 
 根據以上測出來的資料可以看出Insertion Sort符合平均情況(O($n^2$) Quick Sort符合平均情況O($n log n$) Merge Sort符合平均情況O($n log n$)  Heap Sort符合平均情況O($n log n$)，這4個排序法都符合他們平均情況下的時間複雜度
 
