@@ -1,11 +1,11 @@
 # 41243210
 # 41243231
 
-作業一
+作業二
 
 ## 解題說明
 
-本題要求測試4種排序方法，在最壞資料情況下測試獲取他們的效率時間範圍，並寫出複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
+寫一個具有插入和刪除指定節點的二元搜尋樹
 
 ### 解題策略
 1.實作四種排序：Insertion Sort、Quick Sort、Merge Sort、Heap Sort。
@@ -23,118 +23,101 @@
 所使用到的所有函式庫
 ```cpp
 #include <iostream>
+#include <random>
 #include <cmath>
-#include <fstream>
+#include <utility>
 #include <vector>
-#include <ctime>
-#include <cstdlib>
-#include <string>
-#include <algorithm>
+using namespace std;
 ```
 
 讀取文字檔案
 
 ```cpp
-vector<int> read_data(const string& filename, int& n) {
-    ifstream in;
-    in.open(filename);
-    if (!in.is_open()) {
-        throw runtime_error("Cannot open file: " + filename);
-    }
-
-    // 讀入資料筆數
-    in >> n;
-    vector<int> a(n);
-
-    // 讀入資料
-    for (int i = 0; i < n; i++) {
-        if (!(in >> a[i])) {
-            in.close();
-            throw runtime_error("Invalid data format in file: " + filename);
-        }
-    }
-
-    in.close();
-    return a;
-}
+template <class K, class E>
+class Dictionary {
+public:
+    virtual bool IsEmpty() const = 0;
+    virtual pair<K, E>* Get(const K&) const = 0;
+    virtual void Insert(const pair<K, E>&) = 0;
+    virtual void Delete(const K&) = 0;
+    virtual TreeNode<K, E>* findMin(TreeNode<K, E>*) = 0;
+};
 ```
 寫入文字檔案
 
 ```cpp
-void write_to_file(const vector<int>& data, const string& filename) {
-    ofstream out(filename);
-    out << data.size() << endl;
-    for (int i = 0; i < data.size(); i++) {
-        out << data[i];
-        if (i < data.size() - 1) out << " ";
+template <class K, class E>
+class TreeNode {
+public:
+    TreeNode* leftChild;
+    TreeNode* rightChild;
+    pair<K, E> data;
+    TreeNode(pair<K, E> e) {
+        this->data.first = e.first;
+        this->data.second = e.second;
+        this->leftChild = NULL;
+        this->rightChild = NULL;
     }
-    out << endl;
-    out.close();
-}
+};
 ```
 
 
 生成insertion sort最糟糕的資料
 
 ```cpp
-void generate_insertion_worst(int n) {
-    vector<int> data(n);
-    for (int i = 0; i < n; i++) {
-        data[i] = n - i;
-    }
-    write_to_file(data, "data.txt");
-}
-}
+template <class K, class E>
+class BST : public Dictionary<K, E> {
+private:
+    TreeNode<K, E>* root;
+    int height(TreeNode<K, E>* node) const;
+
+public:
+    int count = 0;
+    double total = 0;
+    BST() { root = 0; }
+    bool IsEmpty() const override;
+    pair<K, E>* Get(const K&) const override;
+    void Insert(const pair<K, E>&) override;
+    void Delete(const K&) override;
+    TreeNode<K, E>* findMin(TreeNode<K, E>*) override;
+    int getHeight() const;
+};
 ```
 
 merge sort和heap sort的前置生成函數
 
 
 ```cpp
-void permute(vector<int>& arr, int n) {
-    for (int i = n - 1; i >= 1; --i) {
-        int j = rand() % (i + 1); // Random index from 0 to i
-        swap(arr[i], arr[j]);
-    }
+template <class K, class E>
+int BST<K, E>::height(TreeNode<K, E>* node) const {
+    if (!node) return 0;
+    return 1 + max(height(node->leftChild), height(node->rightChild));
 }
 ```
 生成merge sort和heap sort最糟糕資料
 
 ```cpp
-void generate_merge_worst(int n) {
-    srand(time(0));
-    vector<int> arr(n);
-
-    // Initialize array with 1 to n
-    for (int i = 0; i < n; ++i) {
-        arr[i] = i + 1;
-    }
-
-    // Generate one random permutation
-    permute(arr, n);
-    write_to_file(arr, "data.txt");
+template <class K, class E>
+bool BST<K, E>::IsEmpty() const {
+    return root == 0;
 }
 ```
 
 生成隨機資料
 
 ```cpp
-void generate_random_data(int n) {
-    ofstream out("data.txt");
-    if (!out.is_open()) {
-        cerr << "無法開啟檔案: " << "data.txt" << endl;
-        return;
+template <class K, class E>
+pair<K, E>* BST<K, E>::Get(const K& k) const {
+    TreeNode<K, E>* currentNode = root;
+    while (currentNode) {
+        if (k < currentNode->data.first)
+            currentNode = currentNode->leftChild;
+        else if (k > currentNode->data.first)
+            currentNode = currentNode->rightChild;
+        else
+            return &(currentNode->data);
     }
-
-    srand(time(NULL)); // 設定隨機種子
-
-    out << n << endl; // 寫入資料筆數
-    for (int i = 0; i < n; i++) {
-        out << rand() % n << " ";
-    }
-    out << endl;
-
-    out.close();
+    return 0;
 }
 ```
 
@@ -142,196 +125,124 @@ void generate_random_data(int n) {
 Insertion Sort
 
 ```cpp
-template<class T>
-vector<T> insertsort(vector<T> a, int n){
-    T temp;
-    for(int i = 1; i < n; i++){
-        temp = a[i];
-        int j = i - 1;
-        while(j >= 0 && temp < a[j]){
-            a[j + 1] = a[j];
-            j--;
+template <class K, class E>
+void BST<K, E>::Insert(const pair<K, E>& thePair) {
+    TreeNode<K, E>* p = root, * pp = 0;
+    while (p) {
+        pp = p;
+        if (thePair.first < p->data.first)
+            p = p->leftChild;
+        else if (thePair.first > p->data.first)
+            p = p->rightChild;
+        else {
+            p->data.second = thePair.second;
+            return;
         }
-        a[j + 1] = temp;
     }
-    return a;
+    p = new TreeNode<K, E>(thePair);
+    if (root) {
+        if (thePair.first < pp->data.first)
+            pp->leftChild = p;
+        else
+            pp->rightChild = p;
+    }
+    else
+        root = p;
 }
 ```
 
 Quick Sort
 
 ```cpp
-template<class T>
-vector<T> quicksort(vector<T> a, const int& front, const int& end, const bool& worst) {
-    if (worst)
-        quicksortWorst(a, front, end);
-    else
-        quicksortNormal(a, front, end);
-    return a;
+template <class K, class E>
+TreeNode<K, E>* BST<K, E>::findMin(TreeNode<K, E>* node) {
+    if (node == 0 || node->leftChild == 0) return node;
+    return findMin(node->leftChild);
 }
 ```
 
 ```cpp
-template<class T>
-void quicksortNormal(vector<T>& a, int left, int right){
-    if(left < right){
-
-        // 取三個數的中間值
-        int mid = (left + right) / 2;
-        if (a[mid] < a[left]) swap(a[left], a[mid]);
-        if (a[right] < a[left]) swap(a[left], a[right]);
-        if (a[mid] < a[right]) swap(a[mid], a[right]);
-        // 將pivot移到最左邊
-        swap(a[left], a[right]);
-
-        int i = left, j = right + 1;
-        do{
-            do i++; while(a[i] < a[left]);
-            do j--; while(a[j] > a[left]);
-            if(i < j) swap(a[i], a[j]);
-        }while(i < j);
-        
-        swap(a[left], a[j]);
-        
-        quicksort(a, left, j - 1);
-        quicksort(a, j + 1, right);
+template <class K, class E>
+void BST<K, E>::Delete(const K& k) {
+    TreeNode<K, E>* p = root, * pp = 0;
+    while (p && p->data.first != k) {
+        pp = p;
+        if (k < p->data.first)
+            p = p->leftChild;
+        else
+            p = p->rightChild;
     }
+    if (!p) return;
 
+    if (p->leftChild && p->rightChild) {
+        TreeNode<K, E>* successor = findMin(p->rightChild);
+        p->data = successor->data;
+        Delete(successor->data.first);
+    }
+    else {
+        TreeNode<K, E>* nodeToDelete = p;
+        if (pp) {
+            if (p->leftChild)
+                p = p->leftChild;
+            else
+                p = p->rightChild;
+            if (nodeToDelete == pp->leftChild)
+                pp->leftChild = p;
+            else
+                pp->rightChild = p;
+        }
+        else {
+            root = p->leftChild ? p->leftChild : p->rightChild;
+        }
+        delete nodeToDelete;
+    }
 }
 ```
 
 Merge Sort
 
 ```cpp
-// 將左右陣列合併並排列
-template<class T>
-void merge(vector<T>& a, const int& front, const int& mid, const int& end){
-    int i, j, count;
-    i = j = 0;
-    count = front;
-    vector<T>   left(a.begin()+front, a.begin()+mid+1), 
-                right(a.begin()+mid+1, a.begin()+end+1);
-
-    // 若左陣列和右邊界都還沒到底，繼續比較
-    while(i < left.size() && j < right.size()){
-        if(left[i] < right[j]){
-            a[count] = left[i];
-            i++;
-        }
-        else{
-            a[count] = right[j];
-            j++;
-        }
-        count++;
-    }
-
-    // 將剩下的數值填入結果
-    while(i < left.size())
-        a[count++] = left[i++];
-    while(j < right.size())
-        a[count++] = right[j++];
-
-}
-
-template<class T>
-void mergesort(const vector<T>& a, const int& front, const int& end){
-    // 只剩一個元素時，回傳單一元素的vector
-    if (front >= end) {
-        vector<T> single = { a[front] };
-        return single;
-    }
-
-    int mid = (front + end) / 2;
-    vector<T> left = mergesort(a, front, mid);
-    vector<T> right = mergesort(a, mid + 1, end);
-    return merge(front, end);
+template <class K, class E>
+int BST<K, E>::getHeight() const {
+    return height(root);
 }
 ```
 
 Heap Sort
 
 ```cpp
-template<class T>
-void maxheapify(vector<T>& a, const int& root, const int& len){
-    int left = 2*root+1;
-    int right = 2*root+2;
-    int largest = root;
-
-    if(left < len && a[left] >= a[largest]){
-        largest = left;
+void permute(vector<int>& arr, int n, mt19937& gen) {
+    for (int i = n - 1; i >= 1; --i) {
+        int j = gen() % (i + 1); // 隨機索引 [0, i]
+        swap(arr[i], arr[j]);
     }
-    
-    if(right < len && a[right] >= a[largest]){
-        largest = right;
-    }
-
-    if(largest != root){
-        swap(a[root], a[largest]);
-        maxheapify(a, largest, len);
-    }
-}
-
-// 建立最大堆積樹
-template<class T>
-void maxheap(vector<T>& a){
-    for(int i = a.size()/2; i >= 0; i--){
-        maxheapify(a, i, a.size());
-    }
-}
-
-template<class T>
-void heapsort(vector<T> a){
-    int len = a.size();
-    maxheap(a);
-    for(int i = a.size()-1; i > 0; i--){
-        swap(a[i], a[0]);
-        // 減掉以排序的長度在找下個最大堆積
-        maxheapify(a, 0, --len);
-    }
-    return a;
 }
 ```
 
 Composite sort
 ```c++
-template<class T>
-void compositesort(vector<T>& a, const int& left, const int& right, int depth) {
-    int size = right - left + 1;
+int main() {
+    random_device rd;
+    mt19937 gen(rd());
 
-    if (left >= right) return;
+    BST<int, int> bst;
 
-    // 資料筆數低時使用InsertSort
-    if (size <= 30) {
-        a = insertsort(a, left, right);
-        return;
-    }
-
-    // 遞迴深度高時HeapSort
-    if (depth >= log2(a.size())) {
-        a = heapsort(a, left, right);
-        return;
-    }
-
-    // 預設使用Quicksort
-    
-    // 取三個數的中間值
-    int mid = (left + right) / 2;
-    if (a[mid] < a[left]) swap(a[left], a[mid]);
-    if (a[right] < a[left]) swap(a[left], a[right]);
-    if (a[mid] < a[right]) swap(a[mid], a[right]);
-    swap(a[left], a[right]);
-
-    int i = left, j = right + 1;
-    do {
-        do i++; while (a[i] < a[left]);
-        do j--; while (a[j] > a[left]);
-        if (i < j) swap(a[i], a[j]);
-    } while (i < j);
-
-    swap(a[left], a[j]);
-
-    compositesort(a, left, j - 1, depth+1);
-    compositesort(a, j + 1, right, depth+1);
+    cout << "n,Ratio\n"; 
+        int n = 100;
+        vector<int> keys(n);
+        for (int j = 0; j < n; j++) {
+            keys[j] = j + 1;
+        }
+        permute(keys, n, gen);
+        for (int j = 0; j < n; j++) {
+            int value = gen() % 1000000 + 1; 
+            pair<int, int> p(keys[j], value);
+            bst.Insert(p);
+        }
+        int h = bst.getHeight();
+        double ratio = (double)h / log2(n);
+        cout << n << "," << ratio << endl;
+    return 0;
 }
 ```
 
