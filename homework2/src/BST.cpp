@@ -2,14 +2,13 @@
 #include <random>
 #include <cmath>
 #include <utility>
+#include <vector>
 
 using namespace std;
 
 // 前向聲明 TreeNode
-template <class K, class E>
-class TreeNode;
+template <class K, class E> class TreeNode;
 
-// Dictionary 抽象基類
 template <class K, class E>
 class Dictionary {
 public:
@@ -17,11 +16,9 @@ public:
     virtual pair<K, E>* Get(const K&) const = 0;
     virtual void Insert(const pair<K, E>&) = 0;
     virtual void Delete(const K&) = 0;
-    // 正確宣告 findMin 為純虛擬函數
     virtual TreeNode<K, E>* findMin(TreeNode<K, E>*) = 0;
 };
 
-// TreeNode 模板類
 template <class K, class E>
 class TreeNode {
 public:
@@ -36,7 +33,6 @@ public:
     }
 };
 
-// BST 類，繼承自 Dictionary
 template <class K, class E>
 class BST : public Dictionary<K, E> {
 private:
@@ -44,17 +40,17 @@ private:
     int height(TreeNode<K, E>* node) const;
 
 public:
+    int count = 0;
+    double total = 0;
     BST() { root = 0; }
     bool IsEmpty() const override;
     pair<K, E>* Get(const K&) const override;
     void Insert(const pair<K, E>&) override;
     void Delete(const K&) override;
-    // 確保 findMin 簽名與基類一致
     TreeNode<K, E>* findMin(TreeNode<K, E>*) override;
     int getHeight() const;
 };
 
-// 實作 BST 的成員函數
 template <class K, class E>
 int BST<K, E>::height(TreeNode<K, E>* node) const {
     if (!node) return 0;
@@ -152,11 +148,33 @@ int BST<K, E>::getHeight() const {
     return height(root);
 }
 
-// 主程式測試
+void permute(vector<int>& arr, int n, mt19937& gen) {
+    for (int i = n - 1; i >= 1; --i) {
+        int j = gen() % (i + 1); // 隨機索引 [0, i]
+        swap(arr[i], arr[j]);
+    }
+}
+
 int main() {
-    BST<int, int> bst; // 現在應該可以正確實例化
-    pair<int, int> p(1, 10);
-    bst.Insert(p);
-    cout << "Height: " << bst.getHeight() << endl;
+    random_device rd;
+    mt19937 gen(rd());
+
+    BST<int, int> bst;
+
+    cout << "n,Ratio\n"; 
+        int n = 10000;
+        vector<int> keys(n);
+        for (int j = 0; j < n; j++) {
+            keys[j] = j + 1;
+        }
+        permute(keys, n, gen);
+        for (int j = 0; j < n; j++) {
+            int value = gen() % 1000000 + 1; 
+            pair<int, int> p(keys[j], value);
+            bst.Insert(p);
+        }
+        int h = bst.getHeight();
+        double ratio = (double)h / log2(n);
+        cout << h << "," << ratio << endl;
     return 0;
 }
