@@ -3,10 +3,10 @@
 #include <cmath>
 #include <utility>
 #include <vector>
+#include <chrono>
 
 using namespace std;
 
-// 前向聲明 TreeNode
 template <class K, class E> class TreeNode;
 
 template <class K, class E>
@@ -150,7 +150,7 @@ int BST<K, E>::getHeight() const {
 
 void permute(vector<int>& arr, int n, mt19937& gen) {
     for (int i = n - 1; i >= 1; --i) {
-        int j = gen() % (i + 1); // 隨機索引 [0, i]
+        int j = gen() % (i + 1); 
         swap(arr[i], arr[j]);
     }
 }
@@ -173,8 +173,15 @@ int main() {
             pair<int, int> p(keys[j], value);
             bst.Insert(p);
         }
+        int key_to_delete = keys[gen() % n]; 
+        auto start = chrono::high_resolution_clock::now();
+        bst.Delete(key_to_delete);
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
+        double delete_time_ms = duration / 1000.0; 
+
         int h = bst.getHeight();
         double ratio = (double)h / log2(n);
-        cout << h << "," << ratio << endl;
-    return 0;
+        cout << n << "," << h << "," << ratio << "," << delete_time_ms << endl;   
+        return 0;
 }
