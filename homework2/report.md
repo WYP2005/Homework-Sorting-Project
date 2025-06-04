@@ -304,7 +304,7 @@ auto end = chrono::high_resolution_clock::now();
 auto duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
 double delete_time_ms = duration / 1000.0; // 轉換為毫秒
 ```
-###結論
+### 結論
 經過測試可以得知插入不同大小的資料量的高度都有有符合O(log2)而且在對應資料量大小的BST底下刪除任意一個key的時間也有符合平均 O(log n)
 
 
