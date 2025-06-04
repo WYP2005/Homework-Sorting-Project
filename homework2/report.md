@@ -18,6 +18,7 @@
 #include <cmath>
 #include <utility>
 #include <vector>
+#include <chrono>
 using namespace std;
 ```
 BST的抽象母類別
@@ -210,7 +211,7 @@ int main() {
     BST<int, int> bst;
 
     cout << "n,Ratio\n"; 
-        int n = 100;
+        int n = 10000;
         vector<int> keys(n);
         for (int j = 0; j < n; j++) {
             keys[j] = j + 1;
@@ -221,60 +222,24 @@ int main() {
             pair<int, int> p(keys[j], value);
             bst.Insert(p);
         }
+        int key_to_delete = keys[gen() % n]; 
+        auto start = chrono::high_resolution_clock::now();
+        bst.Delete(key_to_delete);
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
+        double delete_time_ms = duration / 1000.0; 
+
         int h = bst.getHeight();
         double ratio = (double)h / log2(n);
-        cout << n << "," << ratio << endl;
-    return 0;
+        cout << n << "," << h << "," << ratio << "," << delete_time_ms << endl;   
+        return 0;
 }
 ```
 
 ## 效能分析
 
-### 不同排序的空間複雜度
-| 排序演算法 | 空間複雜度| 
-|----------|--------------|
-| Insertion Sort   | O($1$) |
-| Merge Sort   | O($n$)|
-| Heap Sort   | O($1$) |
-| Quick Sort   | O($log n$)
+### 時間精確度:us
 
-
-
-### 不同排序的時間複雜度
-| 排序演算法 | Best| Worst| Avg| 
-|----------|--------------|--------------|--------------|
-| Insertion Sort   | O($n$)  | O($n^2$) | O($n^2$) |
-| Merge Sort   | O($n log n$)  | O($n log n$) | O($n log n$) |
-| Heap Sort   | O($n log n$)   | O($n log n$) | O($n log n$) |
-| Quick Sort   | O($n log n$)  | O($n^2$) | O($n log n$)
-
-
-
-
-### 不同排序運行效率最佳範圍
-| 排序演算法 | 最佳效率範圍| 理由 |
-|----------|--------------|----------|
-| Insertion Sort   | $n <= 30$      | 小數據處理快速、記憶體占用小        | 
-| Merge Sort   | $n >= 500$     | 各種情況時間複雜度都為O(nlogn)        | 
-| Heap Sort   | $n >= 500$       | 記憶體占用小      | 
-| Quick Sort   | $n >= 500$      | 平均最快       | 
-
-
-## 測試與驗證
-
-
-
-### 計時方式
-使用在<ctime>中的clock()，單位為毫秒
-用法如以下程式
-```c++
-start = clock();
-insertsort(a, n);
-stop = clock();
-(stop - start) / CLOCKS_PER_SEC // 轉成秒
-```
-
-### 時間精確度:s
 ### 各數值的比值表(10次取平均)
 | 測試案例 | 輸入參數 $n$ | 高度 | 高度除以log2n比值| 
 |----------|--------------|----------|----------|
@@ -287,20 +252,33 @@ stop = clock();
 
 根據上述表格可以看出總體比值大概都是為2開頭上下
 
+| 測試案例 | 輸入參數 $n$ | 耗時(10次取平均| 
+|----------|--------------|----------|----------|
+| 測試一   | $n = 100$      | 1     |
+| 測試二   | $n = 500$      | 1	        | 
+| 測試三   | $n = 1000$      | 1       | 
+| 測試四   | $n = 2000$      |1      | 
+| 測試五   | $n = 3000$     | 1 |
+| 測試六   | $n = 10000$     |  2|
 
-### 不同排序運行平均時間(500組平均)
-| 測試案例 | 輸入參數 $n$ | Insertion Sort | Quick Sort |Merge Sort | Heap Sort |Composite Sorting Function |
-|----------|--------------|----------|----------|----------|----------|----------|
-| 測試一   | $n = 30$      | 0.000004       | 0.000004       |0.000018     |0.000002        |0.000002      |
-| 測試二   | $n = 500$     | 0.000234  | 0.000042   |0.0002      |0.000074  |0.000056       |
-| 測試三   | $n = 1000$    | 0.00096  | 0.000102  |0.000492      |0.000156    |0.00011       |
-| 測試四   | $n = 2000$    | 0.003678  | 0.000198   |0.001116     |0.000348   |0.000222        |
-| 測試五   | $n = 3000$    | 0.011764  | 0.000418   |0.002088     |0.000712   |0.000426         |
-| 測試六   | $n = 4000$    | 0.019884  | 0.000478   |0.00261     |0.00092   |0.000666        |
-| 測試七   | $n = 5000$    | 0.027722   | 0.000644  |0.003374     |0.001156    |0.00084        |
-| 測試八   | $n = 10000$   | 0.13326  | 0.001482  |0.007308     |0.002576    |0.002226        |
-| 測試九   | $n = 30000$   | 1.272  | 0.004786   |0.021888     |0.008928   |0.0122722        |
-| 測試十   | $n = 50000$   | 3.55914  | 0.00838   |0.038854      |0.016022   |0.026612        |
+
+## 測試與驗證
+
+
+
+### 計時方式
+使用在<ctime>中的clock()，單位為毫秒
+用法如以下程式
+```c++
+auto start = chrono::high_resolution_clock::now();
+bst.Delete(key_to_delete);
+auto end = chrono::high_resolution_clock::now();
+auto duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
+double delete_time_ms = duration / 1000.0; // 轉換為毫秒
+```
+
+
+
 
 
 
