@@ -274,7 +274,7 @@ int main() {
 | 測試五   | $n = 3000$     | 26.2 |2.2683 | 
 | 測試六   | $n = 10000$     |  31.6	|2.3781|  
 
-根據上述表格可以看出總體比值大概都是為2開頭上下
+根據上述表格可以看出總體比值大概都是為2開頭上下，高度符合O(log2)
 
 | 測試案例 | 輸入參數 $n$ | 耗時(10次取平均| 
 |----------|--------------|----------|
@@ -289,7 +289,10 @@ int main() {
 
 ## 測試與驗證
 
-
+```c++
+int n =10000;
+```
+更改main裡的這一行為想要的測試的資料量重複執行10次取得的插入後的高度和比值和執行隨機刪除其中一個key所需要的時間並都取平均幾路在表格上
 
 ### 計時方式
 使用在<chrono>中的high_resolution_clock::now()，單位為毫秒
@@ -301,6 +304,10 @@ auto end = chrono::high_resolution_clock::now();
 auto duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
 double delete_time_ms = duration / 1000.0; // 轉換為毫秒
 ```
+###結論
+經過測試可以得知插入不同大小的資料量的高度都有有符合O(log2)而且在對應資料量大小的BST底下刪除任意一個key的時間也有符合平均 O(log n)
+
+
 
 
 
