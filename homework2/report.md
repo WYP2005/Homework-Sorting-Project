@@ -285,13 +285,14 @@ int main() {
 | 測試五   | $n = 3000$     | 1 |
 | 測試六   | $n = 10000$     |  2|
 
+根據上述表格可以看出刪除的時間複雜度符合平均 O(log n)
 
 ## 測試與驗證
 
 
 
 ### 計時方式
-使用在<ctime>中的clock()，單位為毫秒
+使用在<chrono>中的high_resolution_clock::now()，單位為毫秒
 用法如以下程式
 ```c++
 auto start = chrono::high_resolution_clock::now();
