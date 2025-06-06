@@ -1,19 +1,12 @@
 # Assignment 3: External Sorting Input Time Analysis
 
 ## 解題說明
-
-### 解題策略
-
 **練習 1(a)：**  
 推導外部排序第二階段（合併階段）的總輸入時間 $t_{\text{input}}$，這涉及緩衝區配置、合併次數、磁碟存取與傳輸時間。
 
 **練習 1(b)：**  
 根據給定參數，計算不同 $k$ 值下的 $t_{\text{input}}$，繪製其與 $k$ 的關係圖，並判斷是否存在某個 $k$ 使得 $t_{\text{cpu}} \approx t_{\text{input}}$。
-
----
-
-## 解題步驟
-
+## 解題策略
 ### 練習 1(a)
 
 1. **記憶體配置**  
@@ -54,9 +47,8 @@
 | $S$      | 2000 records      |
 | $t_{\text{cpu}}$ | 1000 秒     |
 
----
 
-## Python 程式碼
+## 程式實作
 
 ```python
 import math
