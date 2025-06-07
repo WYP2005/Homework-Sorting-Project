@@ -309,20 +309,21 @@ void compositesort(vector<T>& a, const int& left, const int& right, int depth) {
 
     if (left >= right) return;
 
-    // �p�ƾڨϥ�insertSort
+    // 資料筆數低時使用InsertSort
     if (size <= 30) {
         a = insertsort(a, left, right);
         return;
     }
 
-    // ���j�`�׹L�`��heapSort
+    // 遞迴深度高時HeapSort
     if (depth >= log2(a.size())) {
         a = heapsort(a, left, right);
         return;
     }
 
-    // �w�]�ϥ�quickSort
-    // ���T�Ӽƪ�������
+    // 預設使用Quicksort
+    
+    // 取三個數的中間值
     int mid = (left + right) / 2;
     if (a[mid] < a[left]) swap(a[left], a[mid]);
     if (a[right] < a[left]) swap(a[left], a[right]);

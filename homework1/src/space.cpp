@@ -252,7 +252,7 @@ vector<T> merge(const vector<T>& left, const vector<T>& right) {
 }
 
 template<class T>
-vector<T> mergesort(vector<T>& a, const int& front, const int& end) {
+vector<T> mergesort(vector<T> a, const int& front, const int& end) {
     // 只剩一個元素時，回傳單一元素的vector
     if (front >= end) {
         vector<T> single = { a[front] };

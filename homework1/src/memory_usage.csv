@@ -4,4 +4,4 @@ n,InsertsortMemoryUsage,QuicksortMemoryUsage,MeragesortMemoryUsage,HeapsortMemor
 2000,4,288,8000,12,
 3000,4,320,12000,12,
 4000,4,288,16000,12,
-5000,4,288,20000,12,
+5000,4,288,20000,12
