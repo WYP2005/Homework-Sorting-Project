@@ -51,77 +51,53 @@
 
 ## 程式實作
 
-```python
+```cpp
 #include <iostream>
 #include <iomanip>
 #include <cmath>
 #include <vector>
 #include <tuple>
-#include "matplotlibcpp.h"
-
-namespace plt = matplotlibcpp;
 
 int main() {
-    // 參數
-    double ts = 0.08;
-    double tl = 0.02;
-    double tr = 0.001;
-    int n = 200000;
-    int m = 64;
-    int S = 2000;
-    double tcpu = 1000.0;
+    double ts = 0.08; 
+    double tl = 0.02;  
+    double tr = 0.001; 
+    int n = 200000;    
+    int m = 64;        
+    int S = 2000;     
+    double tcpu = 1000.0; ;
 
-    // k 值列表
-    std::vector<int> k_values = {2, 4, 8, 16, 32, 64};
+    std::vector<int> k_values = { 2, 4, 8, 16, 32, 64 };
     std::vector<std::tuple<int, int, int, int, double, double>> analysis;
 
-    // 計算
     for (int k : k_values) {
-        int p = std::ceil(std::log(m) / std::log(k));
+        int p = std::ceil(std::log(m) / std::log(k)); 
         int B = S / (2 * k + 2);
-        int io_per_pass = std::ceil((double)n / B);
-        double t_io = ts + tl + B * tr;
-        double t_input = p * io_per_pass * t_io;
+        int io_per_pass = std::ceil(static_cast<double>(n) / B); 
+        double t_io = ts + tl + B * tr; 
+        double t_input = p * io_per_pass * t_io; 
         analysis.emplace_back(k, p, B, io_per_pass, t_io, t_input);
     }
 
-    // 表格輸出
     std::cout << std::setw(2) << "k"
-              << std::setw(4) << "p"
-              << std::setw(6) << "B"
-              << std::setw(10) << "I/O 次數"
-              << std::setw(12) << "t_io (秒)"
-              << std::setw(17) << "t_input (秒)" << "\n";
+        << std::setw(4) << "p"
+        << std::setw(6) << "B"
+        << std::setw(10) << "I/O 次數"
+        << std::setw(12) << "t_io (秒)"
+        << std::setw(17) << "t_input (秒)" << "\n";
 
-    for (const auto& [k, p, B, io_count, t_io, t_input] : analysis) {
-        std::cout << std::setw(2) << k
-                  << std::setw(4) << p
-                  << std::setw(6) << B
-                  << std::setw(10) << io_count
-                  << std::setw(12) << std::fixed << std::setprecision(3) << t_io
-                  << std::setw(17) << std::fixed << std::setprecision(2) << t_input
-                  << "\n";
+    for (const auto& tup : analysis) {
+        std::cout << std::setw(2) << std::get<0>(tup)
+            << std::setw(4) << std::get<1>(tup)
+            << std::setw(6) << std::get<2>(tup)
+            << std::setw(10) << std::get<3>(tup)
+            << std::setw(12) << std::fixed << std::setprecision(3) << std::get<4>(tup)
+            << std::setw(17) << std::fixed << std::setprecision(2) << std::get<5>(tup)
+            << "\n";
     }
-
-    // 繪圖
-    std::vector<int> k_plot;
-    std::vector<double> t_input_plot;
-
-    for (const auto& [k, p, B, io_count, t_io, t_input] : analysis) {
-        k_plot.push_back(k);
-        t_input_plot.push_back(t_input);
-    }
-
-    plt::plot(k_plot, t_input_plot, "o-");
-    plt::axhline(tcpu, 0.0, 1.0, {{"color", "red"}, {"linestyle", "--"}});
-    plt::xlabel("k (merge ways)");
-    plt::ylabel("t_input (秒)");
-    plt::title("t_input and k relationship");
-    plt::grid(true);
-    plt::legend({"t_input", "t_cpu = 1000 s"});
-    plt::show();
 
     return 0;
+}
 }
 
 ```
