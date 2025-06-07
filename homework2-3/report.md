@@ -56,36 +56,40 @@ import math
 import matplotlib.pyplot as plt
 
 # 參數
-ts = 0.08
-tl = 0.02
-tr = 0.001
-n = 200000
-m = 64
-S = 2000
-tcpu = 1000
+ts = 0.08    
+tl = 0.02     
+tr = 0.001   
+n = 200000    
+m = 64      
+S = 2000      
+tcpu = 1000   
 
-# 計算 t_input
+# 計算
 k_values = [2, 4, 8, 16, 32, 64]
-t_input_values = []
+analysis = []
 
 for k in k_values:
-    p = math.ceil(math.log(m, k))
-    B = S // (2 * k + 2)
-    io_per_pass = math.ceil(n / B)
-    t_io = ts + tl + B * tr
-    t_input = p * io_per_pass * t_io
-    t_input_values.append(t_input)
+    p = math.ceil(math.log(m, k))                  
+    B = S // (2 * k + 2)                         
+    io_per_pass = math.ceil(n / B)                 
+    t_io = ts + tl + B * tr                        
+    t_input = p * io_per_pass * t_io              
+    analysis.append((k, p, B, io_per_pass, t_io, t_input))
 
-# 輸出結果
-for k, t in zip(k_values, t_input_values):
-    print(f"k = {k:>2}, t_input = {t:.2f} s")
+# 表格輸出
+print(f"{'k':>2} {'p':>3} {'B':>5} {'I/O 次數':>9} {'t_io (秒)':>10} {'t_input (秒)':>15}")
+for k, p, B, io_count, t_io, t_input in analysis:
+    print(f"{k:>2} {p:>3} {B:>5} {io_count:>9} {t_io:10.3f} {t_input:15.2f}")
 
 # 繪圖
-plt.plot(k_values, t_input_values, marker='o')
+k_plot = [x[0] for x in analysis]
+t_input_plot = [x[-1] for x in analysis]
+
+plt.plot(k_plot, t_input_plot, marker='o')
 plt.axhline(y=tcpu, color='r', linestyle='--', label='t_cpu = 1000 s')
 plt.xlabel("k (merge ways)")
 plt.ylabel("t_input (秒)")
-plt.title("t_input 與 k 的關係")
+plt.title("t_input and k realtionship")
 plt.legend()
 plt.grid(True)
 plt.show()
@@ -128,7 +132,7 @@ plt.show()
 
 
 ## 申論及開發報告
-### 開發過程重點
+### 開發過程
 * 建模數學公式：將外部排序的行為轉換成可計算的時間公式，需明確考慮合併層次、buffer 配置、I/O 成本等。
 
 * 程式計算：使用 Python 撰寫計算程式，觀察 $k$ 值與輸入時間的變化。
