@@ -52,47 +52,78 @@
 ## 程式實作
 
 ```python
-import math
-import matplotlib.pyplot as plt
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <vector>
+#include <tuple>
+#include "matplotlibcpp.h"
 
-# 參數
-ts = 0.08    
-tl = 0.02     
-tr = 0.001   
-n = 200000    
-m = 64      
-S = 2000      
-tcpu = 1000   
+namespace plt = matplotlibcpp;
 
-# 計算
-k_values = [2, 4, 8, 16, 32, 64]
-analysis = []
+int main() {
+    // 參數
+    double ts = 0.08;
+    double tl = 0.02;
+    double tr = 0.001;
+    int n = 200000;
+    int m = 64;
+    int S = 2000;
+    double tcpu = 1000.0;
 
-for k in k_values:
-    p = math.ceil(math.log(m, k))                  
-    B = S // (2 * k + 2)                         
-    io_per_pass = math.ceil(n / B)                 
-    t_io = ts + tl + B * tr                        
-    t_input = p * io_per_pass * t_io              
-    analysis.append((k, p, B, io_per_pass, t_io, t_input))
+    // k 值列表
+    std::vector<int> k_values = {2, 4, 8, 16, 32, 64};
+    std::vector<std::tuple<int, int, int, int, double, double>> analysis;
 
-# 表格輸出
-print(f"{'k':>2} {'p':>3} {'B':>5} {'I/O 次數':>9} {'t_io (秒)':>10} {'t_input (秒)':>15}")
-for k, p, B, io_count, t_io, t_input in analysis:
-    print(f"{k:>2} {p:>3} {B:>5} {io_count:>9} {t_io:10.3f} {t_input:15.2f}")
+    // 計算
+    for (int k : k_values) {
+        int p = std::ceil(std::log(m) / std::log(k));
+        int B = S / (2 * k + 2);
+        int io_per_pass = std::ceil((double)n / B);
+        double t_io = ts + tl + B * tr;
+        double t_input = p * io_per_pass * t_io;
+        analysis.emplace_back(k, p, B, io_per_pass, t_io, t_input);
+    }
 
-# 繪圖
-k_plot = [x[0] for x in analysis]
-t_input_plot = [x[-1] for x in analysis]
+    // 表格輸出
+    std::cout << std::setw(2) << "k"
+              << std::setw(4) << "p"
+              << std::setw(6) << "B"
+              << std::setw(10) << "I/O 次數"
+              << std::setw(12) << "t_io (秒)"
+              << std::setw(17) << "t_input (秒)" << "\n";
 
-plt.plot(k_plot, t_input_plot, marker='o')
-plt.axhline(y=tcpu, color='r', linestyle='--', label='t_cpu = 1000 s')
-plt.xlabel("k (merge ways)")
-plt.ylabel("t_input (秒)")
-plt.title("t_input and k realtionship")
-plt.legend()
-plt.grid(True)
-plt.show()
+    for (const auto& [k, p, B, io_count, t_io, t_input] : analysis) {
+        std::cout << std::setw(2) << k
+                  << std::setw(4) << p
+                  << std::setw(6) << B
+                  << std::setw(10) << io_count
+                  << std::setw(12) << std::fixed << std::setprecision(3) << t_io
+                  << std::setw(17) << std::fixed << std::setprecision(2) << t_input
+                  << "\n";
+    }
+
+    // 繪圖
+    std::vector<int> k_plot;
+    std::vector<double> t_input_plot;
+
+    for (const auto& [k, p, B, io_count, t_io, t_input] : analysis) {
+        k_plot.push_back(k);
+        t_input_plot.push_back(t_input);
+    }
+
+    plt::plot(k_plot, t_input_plot, "o-");
+    plt::axhline(tcpu, 0.0, 1.0, {{"color", "red"}, {"linestyle", "--"}});
+    plt::xlabel("k (merge ways)");
+    plt::ylabel("t_input (秒)");
+    plt::title("t_input and k relationship");
+    plt::grid(true);
+    plt::legend({"t_input", "t_cpu = 1000 s"});
+    plt::show();
+
+    return 0;
+}
+
 ```
 
 ## 效能分析
