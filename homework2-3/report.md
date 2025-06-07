@@ -19,9 +19,8 @@
 
 2. **合併次數**  
    - 初始有 $m$ 個 runs，所需合併次數為：  
-     $
-     p = \lceil \log_k m \rceil
-     $
+     p = ceil(logₖ m)
+
 
 3. **I/O 操作次數**  
    - 每 pass 處理所有 $n$ 筆資料，每次 buffer 滿會做一次 I/O，總共約 $\lceil n / B \rceil$ 次
