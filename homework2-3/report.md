@@ -30,8 +30,9 @@
    - 每次花費 $t_s + t_l + B \cdot t_r$
 
 5. **總輸入時間公式**  
-`t_input = p * ceil(n / B) * (t_s + t_l + B * t_r)`
-
+   $
+   ( t_{\text{input}} = p \cdot \lceil n / B \rceil \cdot (t_s + t_l + B \cdot t_r) )
+   $
 
 ---
 
