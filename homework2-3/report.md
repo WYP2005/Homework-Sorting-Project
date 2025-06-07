@@ -84,4 +84,11 @@ for k, t in zip(k_values, t_input_values):
 
 # 繪圖
 plt.plot(k_values, t_input_values, marker='o')
-plt.axhline(y=
+plt.axhline(y=tcpu, color='r', linestyle='--', label='t_cpu = 1000 s')
+plt.xlabel("k (merge ways)")
+plt.ylabel("t_input (秒)")
+plt.title("t_input 與 k 的關係")
+plt.legend()
+plt.grid(True)
+plt.show()
+```
