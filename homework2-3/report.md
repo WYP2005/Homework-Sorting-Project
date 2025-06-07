@@ -14,7 +14,7 @@
 
 1. **記憶體配置**  
    - 可用記憶體大小為 $S$ records  
-   - 分為 $2k + 2$ 個 buffer（$2k$ 輸入緩衝區 + 2 輸出緩衝區）  
+   - 分為 $2k + 2$ 個 buffer（ $2k$ 輸入緩衝區 + 2 輸出緩衝區）  
    - 每個 buffer 大小為 $B = \left\lfloor \frac{S}{2k + 2} \right\rfloor$
 
 2. **合併次數**  
