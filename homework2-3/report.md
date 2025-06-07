@@ -1,5 +1,8 @@
-# Assignment 3: External Sorting Input Time Analysis
+# 41243210
 
+# 41243231
+
+作業三
 ## 解題說明
 **練習 1(a)：**  
 推導外部排序第二階段（合併階段）的總輸入時間 $t_{\text{input}}$，這涉及緩衝區配置、合併次數、磁碟存取與傳輸時間。
