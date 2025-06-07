@@ -15,11 +15,11 @@ vector<int> read_data(const string& filename, int& n) {
         throw runtime_error("Cannot open file: " + filename);
     }
 
-    // Ū�J��Ƶ���
+    // 讀入資料筆數
     in >> n;
     vector<int> a(n);
 
-    // Ū�J���
+    // 讀入資料
     for (int i = 0; i < n; i++) {
         if (!(in >> a[i])) {
             in.close();
@@ -97,9 +97,9 @@ void generate_random_data(int n) {
         return;
     }
 
-    srand(time(NULL)); // �]�w�H���ؤl
+    srand(time(NULL)); // 設定隨機種子
 
-    out << n << endl; // �g�J��Ƶ���
+    out << n << endl; // 寫入資料筆數
     for (int i = 0; i < n; i++) {
         out << rand() % n << " ";
     }
@@ -143,17 +143,17 @@ template<class T>
 void quicksortWorst(vector<T>& a, const int& front, const int& end) {
     if (front < end) {
         int mid = a[(front + end) / 2], pivot;
-        // ���T�Ӽƪ��̤j��
+        // 取三個數的最大值
         pivot = front;
         if (mid >= a[front] && mid >= a[end])
             pivot = (front + end) / 2;
         if ((a[end] >= a[front] && a[end] >= mid))
             pivot = end;
 
-        // �Npivot����̥���
+        // 將pivot移到最左邊
         swap(a[front], a[pivot]);
 
-        // �N��pivot�p���Ʋ��쥪��A��pivot�j���Ʋ���k��
+        // 將比pivot小的數移到左邊，比pivot大的數移到右邊
         int i = front, j = end + 1;
         do {
             do i++; while (a[i] < a[front]);
@@ -162,8 +162,8 @@ void quicksortWorst(vector<T>& a, const int& front, const int& end) {
         } while (i < j);
         swap(a[front], a[j]);
 
-        quicksortWorst(a, front, j - 1); // �索�䪺�ƶi��Ƨ�
-        quicksortWorst(a, j + 1, end);   // ��k�䪺�ƶi��Ƨ�
+        quicksortWorst(a, front, j - 1); // 對左邊的數進行排序
+        quicksortWorst(a, j + 1, end);   // 對右邊的數進行排序
     }
 }
 
@@ -177,7 +177,7 @@ void quicksortNormal(vector<T>& a, const int& front, const int& end) {
         if (a[mid] < a[end]) swap(a[mid], a[end]);
         swap(a[front], a[end]);
 
-        // �N��pivot�p���Ʋ��쥪��A��pivot�j���Ʋ���k��
+        // 將比pivot小的數移到左邊，比pivot大的數移到右邊
         int i = front, j = end + 1;
         do {
             do i++; while (a[i] < a[front]);
@@ -186,8 +186,8 @@ void quicksortNormal(vector<T>& a, const int& front, const int& end) {
         } while (i < j);
         swap(a[front], a[j]);
 
-        quicksortNormal(a, front, j - 1); // �索�䪺�ƶi��Ƨ�
-        quicksortNormal(a, j + 1, end);   // ��k�䪺�ƶi��Ƨ�
+        quicksortNormal(a, front, j - 1); // 對左邊的數進行排序
+        quicksortNormal(a, j + 1, end);  // 對右邊的數進行排序
     }
 }
 template<class T>
@@ -248,14 +248,14 @@ vector<T> heapsort(vector<T> a, int left, int right) {
 }
 
 // merge sort
-// �N���k�}�C�X�֨ñƦC
+// 將左右陣列合併並排列
 template<class T>
 vector<T> merge(const vector<T>& left, const vector<T>& right) {
     vector<T> result;
     int i, j;
     i = j = 0;
 
-    // �Y���}�C�M�k��ɳ��٨S�쩳�A�~����
+    // 若左陣列和右邊界都還沒到底，繼續比較
     while (i < left.size() && j < right.size()) {
         if (left[i] < right[j]) {
             result.push_back(left[i]);
@@ -267,7 +267,7 @@ vector<T> merge(const vector<T>& left, const vector<T>& right) {
         }
     }
 
-    // �N�ѤU���ƭȶ�J���G
+    // 將剩下的數值填入結果
     while (i < left.size())
         result.push_back(left[i++]);
     while (j < right.size())
@@ -278,7 +278,7 @@ vector<T> merge(const vector<T>& left, const vector<T>& right) {
 
 template<class T>
 vector<T> mergesort(const vector<T>& a, const int& front, const int& end) {
-    // �u�Ѥ@�Ӥ����ɡA�^�ǳ�@������vector
+    // 只剩一個元素時，回傳單一元素的vector
     if (front == end)
     {
         vector<T> result;
@@ -291,11 +291,11 @@ vector<T> mergesort(const vector<T>& a, const int& front, const int& end) {
     vector<T> left = mergesort(a, front, mid),
         right = mergesort(a, mid + 1, end);
 
-    // �X�֨ñƦC
+    // 合併並排列
     return merge(left, right);
 }
 
-// �ˬd�ƧǬO�_���T
+// 檢查排序是否正確
 template<class T>
 bool checksort(const vector<T>& a, int n) {
     for (int i = 0; i < n - 1; i++)
@@ -309,20 +309,32 @@ void compositesort(vector<T>& a, const int& left, const int& right, int depth) {
 
     if (left >= right) return;
 
+<<<<<<< HEAD
     // 資料筆數低時使用InsertSort
+=======
+    // 小數據使用insertSort
+>>>>>>> 4a67195c531307bc823020bd5651479a896e60fa
     if (size <= 30) {
         a = insertsort(a, left, right);
         return;
     }
 
+<<<<<<< HEAD
     // 遞迴深度高時HeapSort
+=======
+    // 遞迴深度過深用heapSort
+>>>>>>> 4a67195c531307bc823020bd5651479a896e60fa
     if (depth >= log2(a.size())) {
         a = heapsort(a, left, right);
         return;
     }
 
+<<<<<<< HEAD
     // 預設使用Quicksort
     
+=======
+    // 預設使用quickSort
+>>>>>>> 4a67195c531307bc823020bd5651479a896e60fa
     // 取三個數的中間值
     int mid = (left + right) / 2;
     if (a[mid] < a[left]) swap(a[left], a[mid]);
@@ -344,16 +356,16 @@ void compositesort(vector<T>& a, const int& left, const int& right, int depth) {
 }
 
 int main() {
-
-    // ���V���p
+    // 最糟狀況
     int data = 30000;
+    std::cin>>data;
     int n;
     vector<int> result;
     double start, stop;
     vector<int> a = read_data("data.txt", n);
 
 
-    // ���մ��J�Ƨ�
+    // 測試插入排序
     // generate_insertion_worst(data);
     // a = read_data("data.txt", n);
     //double time = 0, count = 0;
@@ -370,7 +382,7 @@ int main() {
     // memoryUsage();
     // std::cout << "insertsort time:" << time / count << "s" << endl;
 
-    // ���էֳt�Ƨ�
+    // 測試快速排序
     // cout << n << endl;
     // memoryUsage();
     // a = read_data("data.txt", n);
@@ -387,7 +399,7 @@ int main() {
     // memoryUsage();
     // std::cout << "quicksort time:" << time / count << "s" << endl;
 
-    // // ���վ�X�Ƨ�
+    // // 測試整合排序
     // double max_time = 0;
     // for (int i = 0; i < 20; i++) {
     //     generate_merge_worst(data);
@@ -404,7 +416,7 @@ int main() {
     // memoryUsage();
     // std::cout << "mergesort time:" << max_time << "s" << endl;
 
-    // // ���հ�n�Ƨ�
+    // // 測試堆積排序
     // max_time = 0;
     // for (int i = 0; i < 20; i++) {
     //     generate_heap_worst(data);
@@ -422,7 +434,7 @@ int main() {
     // std::cout << "heapsort time:" << max_time << "s" << endl;
 
 
-    // �������p      
+    // 平均狀況      
     // generate_random_data(data);
 
     double time2 = 0, count2 = 0;

@@ -5,18 +5,18 @@
 
 ## 解題說明
 
-本題要求測試4種排序方法，在最壞資料情況下獲取他們的效率時間範圍，並出複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
+本題要求測試4種排序方法，在最壞資料情況下測試獲取他們的效率時間範圍，並寫出複合排序函數（Composite Sorting Function），使其能對所有 n 提供最佳性能
 
 ### 解題策略
-1.實作四種排序法：Insertion Sort、Quick Sort（使用 median-of-three）、Merge Sort（使用非遞迴法）、Heap Sort。
+1.實作四種排序：Insertion Sort、Quick Sort、Merge Sort、Heap Sort。
 
-2.用4種排序法測試他們各自最壞情況下的時間複雜度（n = 30,500, 1000, ..., 5000,10000）。
+2.測試4種排序他們各自最壞情況下的時間複雜度（n = 30,500, 1000, ..., 5000,10000）。
 
 3.測試平均情況下的時間複雜度（使用亂數產生資料）。
 
 4.比較結果並畫圖。
 
-5.寫出綜合排序函式（Composite Sort Function），並再做比較
+5.寫出綜合排序函式（Composite Sort Function），再去比較另外4個排序
 
 
 ## 程式實作
@@ -74,7 +74,7 @@ void write_to_file(const vector<int>& data, const string& filename) {
 ```
 
 
-生成insertion最糟糕的資料
+生成insertion sort最糟糕的資料
 
 ```cpp
 void generate_insertion_worst(int n) {
@@ -87,7 +87,7 @@ void generate_insertion_worst(int n) {
 }
 ```
 
-merge和heap的前置生成函數
+merge sort和heap sort的前置生成函數
 
 
 ```cpp
@@ -98,27 +98,10 @@ void permute(vector<int>& arr, int n) {
     }
 }
 ```
-生成merge最糟糕資料
+生成merge sort和heap sort最糟糕資料
 
 ```cpp
 void generate_merge_worst(int n) {
-    srand(time(0));
-    vector<int> arr(n);
-
-    // Initialize array with 1 to n
-    for (int i = 0; i < n; ++i) {
-        arr[i] = i + 1;
-    }
-
-    // Generate one random permutation
-    permute(arr, n);
-    write_to_file(arr, "data.txt");
-}
-```
-生成heap最糟資料
-
-```cpp
-void generate_heap_worst(int n) {
     srand(time(0));
     vector<int> arr(n);
 
@@ -179,19 +162,28 @@ Quick Sort
 
 ```cpp
 template<class T>
-void quicksort(vector<T>& a, int left, int right){
+vector<T> quicksort(vector<T> a, const int& front, const int& end, const bool& worst) {
+    if (worst)
+        quicksortWorst(a, front, end);
+    else
+        quicksortNormal(a, front, end);
+    return a;
+}
+```
+
+```cpp
+template<class T>
+void quicksortNormal(vector<T>& a, int left, int right){
     if(left < right){
-        int mid = a[(left+right)/2], pivot;
 
         // 取三個數的中間值
-        pivot = left;
-        if((a[left] >= mid && mid >= a[right]) || (a[left] <= mid && mid <= a[right]))
-            pivot = (left+right) / 2;
-        if((a[right] >= a[left] && a[right] <= mid) || (a[right] <= a[left] && a[right] >= mid))
-            pivot = right;
-
+        int mid = (left + right) / 2;
+        if (a[mid] < a[left]) swap(a[left], a[mid]);
+        if (a[right] < a[left]) swap(a[left], a[right]);
+        if (a[mid] < a[right]) swap(a[mid], a[right]);
         // 將pivot移到最左邊
-        swap(a[left], a[pivot]);
+        swap(a[left], a[right]);
+
         int i = left, j = right + 1;
         do{
             do i++; while(a[i] < a[left]);
@@ -242,15 +234,17 @@ void merge(vector<T>& a, const int& front, const int& mid, const int& end){
 }
 
 template<class T>
-void mergesort(vector<T>& a, const int& front, const int& end){
-
-    if(front < end){
-        int mid;
-        mid = (front+end) / 2;
-        mergesort(a, front, mid);
-        mergesort(a, mid+1, end);
-        merge(a, front, mid, end);
+void mergesort(const vector<T>& a, const int& front, const int& end){
+    // 只剩一個元素時，回傳單一元素的vector
+    if (front >= end) {
+        vector<T> single = { a[front] };
+        return single;
     }
+
+    int mid = (front + end) / 2;
+    vector<T> left = mergesort(a, front, mid);
+    vector<T> right = mergesort(a, mid + 1, end);
+    return merge(front, end);
 }
 ```
 
@@ -286,7 +280,7 @@ void maxheap(vector<T>& a){
 }
 
 template<class T>
-void heapsort(vector<T>& a){
+void heapsort(vector<T> a){
     int len = a.size();
     maxheap(a);
     for(int i = a.size()-1; i > 0; i--){
@@ -294,6 +288,50 @@ void heapsort(vector<T>& a){
         // 減掉以排序的長度在找下個最大堆積
         maxheapify(a, 0, --len);
     }
+    return a;
+}
+```
+
+Composite sort
+```c++
+template<class T>
+void compositesort(vector<T>& a, const int& left, const int& right, int depth) {
+    int size = right - left + 1;
+
+    if (left >= right) return;
+
+    // 資料筆數低時使用InsertSort
+    if (size <= 30) {
+        a = insertsort(a, left, right);
+        return;
+    }
+
+    // 遞迴深度高時HeapSort
+    if (depth >= log2(a.size())) {
+        a = heapsort(a, left, right);
+        return;
+    }
+
+    // 預設使用Quicksort
+    
+    // 取三個數的中間值
+    int mid = (left + right) / 2;
+    if (a[mid] < a[left]) swap(a[left], a[mid]);
+    if (a[right] < a[left]) swap(a[left], a[right]);
+    if (a[mid] < a[right]) swap(a[mid], a[right]);
+    swap(a[left], a[right]);
+
+    int i = left, j = right + 1;
+    do {
+        do i++; while (a[i] < a[left]);
+        do j--; while (a[j] > a[left]);
+        if (i < j) swap(a[i], a[j]);
+    } while (i < j);
+
+    swap(a[left], a[j]);
+
+    compositesort(a, left, j - 1, depth+1);
+    compositesort(a, j + 1, right, depth+1);
 }
 ```
 
@@ -306,6 +344,30 @@ void heapsort(vector<T>& a){
 | Merge Sort   | O($n$)|
 | Heap Sort   | O($1$) |
 | Quick Sort   | O($log n$)
+
+
+
+### 不同排序的時間複雜度
+| 排序演算法 | Best| Worst| Avg| 
+|----------|--------------|--------------|--------------|
+| Insertion Sort   | O($n$)  | O($n^2$) | O($n^2$) |
+| Merge Sort   | O($n log n$)  | O($n log n$) | O($n log n$) |
+| Heap Sort   | O($n log n$)   | O($n log n$) | O($n log n$) |
+| Quick Sort   | O($n log n$)  | O($n^2$) | O($n log n$)
+
+
+
+
+### 不同排序運行效率最佳範圍
+| 排序演算法 | 最佳效率範圍| 理由 |
+|----------|--------------|----------|
+| Insertion Sort   | $n <= 30$      | 小數據處理快速、記憶體占用小        | 
+| Merge Sort   | $n >= 500$     | 各種情況時間複雜度都為O(nlogn)        | 
+| Heap Sort   | $n >= 500$       | 記憶體占用小      | 
+| Quick Sort   | $n >= 500$      | 平均最快       | 
+
+
+## 測試與驗證
 
 測試方式:
 更新最大記憶體函式
@@ -334,15 +396,6 @@ Heap sort 只有left、right、largest
 ```c++
 update_max_memory(3 * sizeof(int)); 
 ```
-
-### 不同排序的時間複雜度
-| 排序演算法 | Best| Worst| Avg| 
-|----------|--------------|--------------|--------------|
-| Insertion Sort   | O($n$)  | O($n^2$) | O($n^2$) |
-| Merge Sort   | O($n log n$)  | O($n log n$) | O($n log n$) |
-| Heap Sort   | O($n log n$)   | O($n log n$) | O($n log n$) |
-| Quick Sort   | O($n log n$)  | O($n^2$) | O($n log n$)
-
 ### 計時方式
 使用在<ctime>中的clock()，單位為毫秒
 用法如以下程式
@@ -368,51 +421,42 @@ stop = clock();
 
 
 
-![糟糕狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366049723403735100/QtXVX4G8N9wAAAABJRU5ErkJggg.png?ex=680f8872&is=680e36f2&hm=c537541d964d58b2a77f98ea6fe97b23d203445aa6a92c8de89b9746891e0cf8&)
+![糟糕狀況折線圖](https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9e6817f3-6f54-4a68-aec3-44100d3f0e90/djvkvhj-8a16824e-4259-462a-befd-9b4c0ffafcbf.png/v1/fill/w_1174,h_681,q_70,strp/qtxvx4g8n9waaaabjru5erkjggg_by_hotdogewtwet_djvkvhj-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjkwIiwicGF0aCI6IlwvZlwvOWU2ODE3ZjMtNmY1NC00YTY4LWFlYzMtNDQxMDBkM2YwZTkwXC9kanZrdmhqLThhMTY4MjRlLTQyNTktNDYyYS1iZWZkLTliNGMwZmZhZmNiZi5wbmciLCJ3aWR0aCI6Ijw9MTE4OSJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.RzDZSK27c-mNOY0FGCXH2WIfaSBpIT0Y4waPpaIQ5bQ)
 根據以上測出來的資料可以看出Insertion Sort符合最壞情況(O($n^2$) Quick Sort符合最壞情況(O($n^2$) Merge Sort符合最壞情況O($n log n$)  Heap Sort符合最壞情況O($n log n$)，這4個排序法都符合他們最壞情況的時間複雜度
 
 
-### 不同排序運行效率最佳範圍
-| 排序演算法 | 最佳效率範圍| 理由 |
-|----------|--------------|----------|
-| Insertion Sort   | 小數據 $n <= 30$      | 小數據處理快速、記憶體占用小        | 
-| Merge Sort   | $n >= 500$     | 各種情況時間複雜度都為O(nlogn)        | 
-| Heap Sort   | $n >= 500$       | 記憶體占用小      | 
-| Quick Sort   | $n >= 500$      | 平均最快       | 
 
-
-### 不同排序運行平均時間(20組平均)
+### 不同排序運行平均時間(500組平均)
 | 測試案例 | 輸入參數 $n$ | Insertion Sort | Quick Sort |Merge Sort | Heap Sort |Composite Sorting Function |
 |----------|--------------|----------|----------|----------|----------|----------|
-| 測試一   | $n = 30$      | 0        | 0        |0      |0         |0.00005      |
-| 測試二   | $n = 500$     | 0.0001  | 0.00005   |0.00015      |0.0001   |0.00005       |
-| 測試三   | $n = 1000$    | 0.0007  | 0.00005  |0.00035      |0.0001    |0.000105263       |
-| 測試四   | $n = 2000$    | 0.00265  | 0.0001   |0.001     |0.0001   |0.000421053        |
-| 測試五   | $n = 3000$    | 0.0059  | 0.00015   |0.00125     |0.00065   |0.000578947         |
-| 測試六   | $n = 4000$    | 0.0095  | 0.0005   |0.00155     |0.0007   |0.000789474        |
-| 測試七   | $n = 5000$    | 0.01535   | 0.0006  |0.0023     |0.00095    |0.001        |
-| 測試八   | $n = 10000$   | 0.0605  | 0.001  |0.0045     |0.00185    |0.00210526        |
-| 測試九   | $n = 30000$   | 0.80815  | 0.0043   |0.0202     |0.00785   |0.00831579        |
-| 測試十   | $n = 50000$   | 2.40035  | 0.0079   |0.0384      |0.0149   |0.0152105        |
+| 測試一   | $n = 30$      | 0.000004       | 0.000004       |0.000018     |0.000002        |0.000002      |
+| 測試二   | $n = 500$     | 0.000234  | 0.000042   |0.0002      |0.000074  |0.000056       |
+| 測試三   | $n = 1000$    | 0.00096  | 0.000102  |0.000492      |0.000156    |0.00011       |
+| 測試四   | $n = 2000$    | 0.003678  | 0.000198   |0.001116     |0.000348   |0.000222        |
+| 測試五   | $n = 3000$    | 0.011764  | 0.000418   |0.002088     |0.000712   |0.000426         |
+| 測試六   | $n = 4000$    | 0.019884  | 0.000478   |0.00261     |0.00092   |0.000666        |
+| 測試七   | $n = 5000$    | 0.027722   | 0.000644  |0.003374     |0.001156    |0.00084        |
+| 測試八   | $n = 10000$   | 0.13326  | 0.001482  |0.007308     |0.002576    |0.002226        |
+| 測試九   | $n = 30000$   | 1.272  | 0.004786   |0.021888     |0.008928   |0.0122722        |
+| 測試十   | $n = 50000$   | 3.55914  | 0.00838   |0.038854      |0.016022   |0.026612        |
 
 
 
-![平均狀況折線圖](https://cdn.discordapp.com/attachments/930060410823016509/1366050541196542062/8p7vDEEIIIUQJJLfyCSGEEEIIIYQQQgi3kFv5hBBCCCGEEEIIIYRbSGJKCCGEEEIIIYQQQriFJKaEEEIIIYQQQgghhFtIYkoIIYQQQgghhBBCuIUkpoQQQgghhBBCCCGEW0hiSgghhBBCCCGEEEK4hSSmhBBCCCGEEEIIIYRbSGJKCCGEEEIIIYQQQriFJKaEEEIIIYQQQgghhFv8fzZk5jdhjGS5AAAAAElFTkSuQmCC.png?ex=680f8935&is=680e37b5&hm=19752d0b7af82e697c23ca5a51c4be7dfcf39fd1ed6bd7e3917122853a419d71&)
+![平均狀況折線圖](https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9e6817f3-6f54-4a68-aec3-44100d3f0e90/djvkvh9-8389e557-378b-4863-8244-37d89dbc1bdc.png/v1/fill/w_990,h_590,q_80,strp/d5be08wnqs3aaaaaaelftksuqmcc_by_hotdogewtwet_djvkvh9-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTkwIiwicGF0aCI6IlwvZlwvOWU2ODE3ZjMtNmY1NC00YTY4LWFlYzMtNDQxMDBkM2YwZTkwXC9kanZrdmg5LTgzODllNTU3LTM3OGItNDg2My04MjQ0LTM3ZDg5ZGJjMWJkYy5wbmciLCJ3aWR0aCI6Ijw9OTkwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.CoLcvvmrMDNE9fmIzTjLotQ-54bMzkurptsr1O5QCz8)
 
 根據以上測出來的資料可以看出Insertion Sort符合平均情況(O($n^2$) Quick Sort符合平均情況O($n log n$) Merge Sort符合平均情況O($n log n$)  Heap Sort符合平均情況O($n log n$)，這4個排序法都符合他們平均情況下的時間複雜度
 
-
-## 測試與驗證
-
-
+![平均空間折線圖](https://github.com/user-attachments/assets/8e1bda6c-eb51-485f-8732-f9fc28dde12b)
 
 
 
 ## 申論及開發報告
+測試所使用每個排序的最糟情況產生  
+插入排序:產生由n、n-1~0由大到小的資料  
+快速排序:沿用插入排序的最糟測資，並更改選擇pivot的邏輯，讓pivot每次都選到最大值  
+整合排序和堆積排序:利用 permute() 函式實作 Fisher-Yates 洗牌法，確保每一個排列機率相同，隨機產生20組測試資料，並從中選出所需時間最久的  
+  
 在寫composite sort時，利用了quick sort當作預設的排序方式，因為速度最快。在遞迴深度過高或需排序長度較低時，採用了heap sort和insertion sort，速度相差不多的情況下又能減少記憶體空間占用。
-
-
-### 結論
 
 
 
