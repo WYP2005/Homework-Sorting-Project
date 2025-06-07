@@ -31,7 +31,7 @@
 
 5. **總輸入時間公式**  
    $$
-   t_{\text{input}} = p \cdot \left\lceil \frac{n}{B} \right\rceil \cdot (t_s + t_l + B \cdot t_r)
+   ( t_{\text{input}} = p \cdot \lceil n / B \rceil \cdot (t_s + t_l + B \cdot t_r) )
    $$
 
 ---
