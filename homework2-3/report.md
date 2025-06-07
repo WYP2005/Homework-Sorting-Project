@@ -95,14 +95,18 @@ plt.show()
 
 | $k$ 值 | 合併層數 $p$ | buffer 大小 $B$ | 每層 I/O 次數 | 單次 I/O 時間 | $t_{\text{input}}$ |
 |--------|---------------|------------------|----------------|----------------|--------------------|
-| 2      | 6             | 285              | 702            | 0.385 秒       | 1623.27 秒         |
-| 4      | 3             | 222              | 901            | 0.322 秒       | 869.69 秒          |
-| 8      | 2             | 111              | 1802           | 0.211 秒       | 761.63 秒          |
-| 16     | 2             | 55               | 3637           | 0.165 秒       | 1198.77 秒         |
+| 2      | 6             | 333              | 601            | 0.433 秒       | 1561.40 秒         |
+| 4      | 3             | 200              | 1000           | 0.300 秒       | 900.00 秒          |
+| 8      | 2             | 111              | 1802           | 0.211 秒       | 760.44 秒          |
+| 16     | 2             | 58               | 3449           | 0.158 秒       | 1089.88 秒         |
 | 32     | 2             | 30               | 6667           | 0.130 秒       | 1733.42 秒         |
-| 64     | 1             | 14               | 14286          | 0.120 秒       | 1714.26 秒         |
+| 64     | 1             | 15               | 13334          | 0.115 秒       | 1533.41 秒         |
+
+
 
 以上數值由程式自動計算而來，略有四捨五入誤差
+![關係圖](https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9e6817f3-6f54-4a68-aec3-44100d3f0e90/djwouzn-78915e07-19b8-41e1-9b10-e9cc0a0f8d4c.png/v1/fit/w_580,h_455,q_70,strp/qaaaaasuvork5cyii_by_hotdogewtwet_djwouzn-375w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NDU1IiwicGF0aCI6IlwvZlwvOWU2ODE3ZjMtNmY1NC00YTY4LWFlYzMtNDQxMDBkM2YwZTkwXC9kandvdXpuLTc4OTE1ZTA3LTE5YjgtNDFlMS05YjEwLWU5Y2MwYTBmOGQ0Yy5wbmciLCJ3aWR0aCI6Ijw9NTgwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.okSQUDiZBiUUZ5LuvFeN2bFtBFeCsTFpUvaSb4NUPKI)
+
 
 ## 測試與驗證
 
